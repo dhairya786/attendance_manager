@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
-from .models import Student, Attendance, Course
+from .models import Student, Attendance, Course, Teachers
 from django.contrib.auth import authenticate
 from django.contrib.auth import login as auth_login
 from .utils import facestore
