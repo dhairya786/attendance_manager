@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
-from .models import Student, Attendance, Course
+from .models import Student, Attendance, Course, AttendanceDetail
 from django.contrib.auth import authenticate
 from django.contrib.auth import login as auth_login
 from .utils import facestore
@@ -137,7 +137,24 @@ class CourseDetail(DetailView):
         print(cc)
         st =Student.objects.filter(user=request.user)
         print(st[0])
-        return render(request,'role/course_detail.html')
+        content= {
+            'cc' : cc,
+        }
+        return render(request,'role/course_detail.html',content)
+    def post(self,request,*args,**kwargs):
+        fro = request.POST['from']
+        to = request.POST['to']
+        pk = kwargs['pk']
+        cc = Course.objects.get(id=pk)
+        st =Student.objects.filter(user=request.user)
+        att = Attendance.objects.filter(course=cc,student=st[0])
+        data = AttendanceDetail.objects.filter(date__range=[fro,to],attendance_field=att[0])
+        content= {
+            'cc' : cc,
+            'data' : data,
+            'att' : att,
+        }
+        return render(request,'role/course_detail.html',content)
 
 
 

@@ -85,3 +85,14 @@ class Attendance(models.Model):
 
     def __str__(self):
         return f"{self.student} in {self.course}"
+
+class AttendanceDetail(models.Model):
+    attendance_field  = models.ForeignKey(Attendance,on_delete=models.CASCADE)
+    date = models.DateField()
+    status = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"{self.attendance_field.student.name} in {self.attendance_field.course.name} at {self.date}"
+
+    class Meta:
+        unique_together = (('attendance_field', 'date'),)
