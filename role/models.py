@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django import template
+from django.urls import reverse
 
 register = template.Library()
 
@@ -33,6 +34,9 @@ class Course(models.Model):
     year = models.IntegerField(blank=True)
     branch = models.CharField(max_length=5,choices=BRANCH_CHOICES)
     image = models.ImageField(blank=True, null=True)
+
+    def get_absolute_url(self):
+        return reverse('role:coursedetail',kwargs={'pk': self.pk})
 
     def __str__(self):
         return f"{self.name}"

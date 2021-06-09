@@ -305,7 +305,7 @@
                       {% for obj in finalval %}
                       {% ifequal obj.course cc%}
                       <tr>
-                            <td>{{cc.name}}</td>
+                            <td><a href="{% url 'coursedetail' cc.pk %}">{{cc.name}}</a></td>
                             <td>{{cc.number}}</td>
                             <td> {{obj.class_attended}} </td>
                             <td> {{obj.total_classes}} </td>

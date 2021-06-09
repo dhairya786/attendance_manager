@@ -2,10 +2,11 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
-from .models import Student, Attendance, Course, Teachers
+from .models import Student, Attendance, Course
 from django.contrib.auth import authenticate
 from django.contrib.auth import login as auth_login
 from .utils import facestore
+from django.views.generic.detail import DetailView
 from attendance_management.settings import BASE_DIR
 
 # Create your views here.
@@ -128,5 +129,15 @@ def addcourse(request):
         'std' : st,
     }  
     return render(request,'role/addcourse.html',context)
+
+class CourseDetail(DetailView):
+    def get(self,request,*args, **kwargs):
+        pk = kwargs['pk']
+        cc = Course.objects.get(id=pk)
+        print(cc)
+        st =Student.objects.filter(user=request.user)
+        print(st[0])
+        return render(request,'role/course_detail.html')
+
 
 
