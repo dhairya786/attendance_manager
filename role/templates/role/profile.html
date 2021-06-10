@@ -1,4 +1,5 @@
 {% load static %}
+{% load crispy_forms_tags %}
 <!DOCTYPE html>
 <html lang="en">
 
@@ -18,7 +19,6 @@
   <link href="{% static '/role/css/material-dashboard.css' %}" rel="stylesheet" />
   <!-- CSS Just for demo purpose, don't include it in your project -->
   <link href="{% static '/role/demo/demo.css' %}" rel="stylesheet" />
-   <link href="{% static '/role/css/raghav.css' %}" rel="stylesheet" />
 </head>
 
 <body class="dark-edition">
@@ -34,13 +34,13 @@
         </a></div>
       <div class="sidebar-wrapper">
         <ul class="nav">
-          <li class="nav-item active  ">
+          <li class="nav-item ">
             <a class="nav-link" href="{% url 'dashboard' %}">
               <i class="material-icons">dashboard</i>
               <p>Dashboard</p>
             </a>
           </li>
-          <li class="nav-item ">
+          <li class="nav-item active">
             <a class="nav-link" href="{% url 'profile' %}">
               <i class="material-icons">person</i>
               <p>User Profile</p>
@@ -90,7 +90,7 @@
       <nav class="navbar navbar-expand-lg navbar-transparent navbar-absolute fixed-top " id="navigation-example">
         <div class="container-fluid">
           <div class="navbar-wrapper">
-            <a class="navbar-brand" href="javascript:void(0)">Dashboard</a>
+            <a class="navbar-brand" href="javascript:void(0)">User Profile</a>
           </div>
           <button class="navbar-toggler" type="button" data-toggle="collapse" aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation" data-target="#navigation-example">
             <span class="sr-only">Toggle navigation</span>
@@ -145,193 +145,46 @@
           </div>
         </div>
       </nav>
-      <!-- End Navbar -->
-
-
-
       <div class="content">
         <div class="container-fluid">
           <div class="row">
-            
-
-            <div class="col-md-12">
+            <div class="col-md-8">
               <div class="card">
                 <div class="card-header card-header-primary">
-                  <h4 class="card-title ">{{cc.name}}</h4>
-                  <p class="card-category">Please entire the desired date fields</p>
-                  <form method="post" action="">
+                  <h4 class="card-title">Edit Profile</h4>
+                  <p class="card-category">Complete your profile</p>
+                </div>
+                <div class="card-body">
+                  <form method="post" enctype="multipart/form-data">
                     {% csrf_token %}
-                    <label for="from">Start Date</label> 
-                    <input type="date" name="from" class="btn btn-primary" id="from">
-                    <label for="to">End Date</label>
-                    <input type="date" name="to" class="btn btn-primary" id="to">
-                     <input type="submit" class="btn btn-primary"  name="wow">
-                  </form>
-                </div>
-                <div class="card-body">
-                  <div class="table-responsive">
-                    <table class="table">
-                      <thead class=" text-primary">
-                        <th>
-                          Date
-                        </th>
-                        <th>
-                          Status
-                        </th>
-                      </thead>
-                      <tbody>
-                        {% for dt in data %}
-                        <tr>
-                          <td>
-                            {{dt.date}}
-                          </td>
-                          {% if dt.status %}
-                          <td class="text-success">                           
-                            PRESENT
-                          </td>
-                            {% else %}
-                            <td class="text-danger"> 
-                            ABSENT
-                          </td>
-                            {% endif %}
-                        </tr>
-                        {% endfor %}
-                      </tbody>
-                    </table>
-                    <input
-    type="button"
-    class="btn btn-primary"
-    value="Go Back"
-    onclick="location.href='{% url 'dashboard' %}';"
-> 
-                  </div>
+                    {{form|crispy}}
+                    <button type="submit" class="btn btn-primary pull-right">Update Profile</button>
+                    <div class="clearfix"></div>
+                    </form>
                 </div>
               </div>
             </div>
-
-              <!--
-            <div class="col-md-12">
-              <div class="card card-plain">
-
-                <div class="card-header card-header-primary">
-                  <table class="table">
-                    <tr>
-                    <colgroup>
-        <col style="width: 39em;"/>
-        <col style="width: 6em;"/>
-        </colgroup>
-                    <td>
-                  <h4 class="card-title mt-0"> Add new courses</h4>
-                  <p class="card-category"> Enter your details in the fields</p>
-                  <form method="post" action="">
-                  {% csrf_token %}
-                
-                  <select name="year" class="form-select btn btn-primary">
-  <option value="-1" selected>Year</option>
-  <option value="1">1st</option>
-  <option value="2">2nd</option>
-  <option value="3">3rd</option>
-  <option value="4">4th</option>
-</select>
-
-
-  <select class="form-select btn btn-primary" name="branch">
-  <option value="-1" selected>Branch</option>
-  <option value="coe">COE</option>
-  <option value="enc">ENC</option>
-  <option value="che">CHE</option>
-  <option value="mec">MEC</option>
-</select>
-  
-
-
-  <input type="submit" class="btn btn-primary"  name="wow">
- 
-</form>
-                </td>
-              </tr>
-</table>
+            <div class="col-md-4">
+              <div class="card card-profile">
+                <div class="card-avatar">
+                  <a href="#pablo">
+                    <img class="img" src="{{st.image.url}}" />
+                  </a>
                 </div>
                 <div class="card-body">
-                  <div class="table-responsive">
-                    <form method="post">
-                      {% csrf_token %}
-                    <table class="table table-hover">
-                      <thead class="">
-                        <th>
-                          Course Name
-                        </th>
-                        <th>
-                          Course Code
-                        </th>
-                        <th>
-                          Checkbox
-                        </th>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          {% for course in myenroll %}
-                           <td>
-                            {{course.name}}
-                           </td>
-                           <td>
-                            {{course.number}}
-                           </td>
-                          <td>
-                            
-                            <div class="form-check">
-                                <label class="form-check-label">
-                                  <input class="form-check-input" type="checkbox" value="{{course.name}}" name="checkbox" checked >
-                                  <span class="form-check-sign">
-                                    <span class="check"></span>
-                                  </span>
-                                </label>
-                              </div>
-                              
-                          </td>
-                        </tr>
-                        {% endfor %}
-                        <tr>
-                          {% for course in notenroll %}
-                           <td>
-                            {{course.name}}
-                           </td>
-                           <td>
-                            {{course.number}}
-                           </td>
-                          <td>
-                            
-                            <div class="form-check">
-                                <label class="form-check-label">
-                                  <input class="form-check-input" type="checkbox" value="{{course.name}}" name="checkbox">
-                                  <span class="form-check-sign">
-                                    <span class="check"></span>
-                                  </span>
-                                </label>
-                              </div>
-                              
-                          </td>
-                        </tr>
-                        {% endfor %}
-                      </tbody>
-                    </table>
-                    <input type="submit" class="btn btn-danger" style="position: absolute;
-  right: 75px;" value="Remove All Courses" name="remove">
-  
-                    <input type="submit" class="btn btn-primary" style="position: absolute;
-  right: 275px;" value="Update Courses" name="update">
-
-</form>
-                  </div>
+                  <h6 class="card-category"></h6>
+                  <h4 class="card-title">{{st.name}}</h4>
+                  <p class="card-description">
+                    
+                  </p>
+                  <a href="#pablo" class="btn btn-primary btn-round">Follow</a>
                 </div>
               </div>
             </div>
-          -->
           </div>
         </div>
       </div>
-
-     <footer class="footer">
+      <footer class="footer">
         <div class="container-fluid">
           <nav class="float-left">
             <ul>
@@ -442,7 +295,6 @@
   <script src="{% static '/role/js/core/popper.min.js' %}"></script>
   <script src="{% static '/role/js/core/bootstrap-material-design.min.js' %}"></script>
   <script src="https://unpkg.com/default-passive-events"></script>
-  <script src="{% static '/role/js/core/myfile.js' %}"></script>
   <script src="{% static '/role/js/plugins/perfect-scrollbar.jquery.min.js' %}"></script>
   <!-- Place this tag in your head or just before your close body tag. -->
   <script async defer src="https://buttons.github.io/buttons.js"></script>

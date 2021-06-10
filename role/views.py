@@ -6,8 +6,15 @@ from .models import Student, Attendance, Course, AttendanceDetail
 from django.contrib.auth import authenticate
 from django.contrib.auth import login as auth_login
 from .utils import facestore
+from .forms import StudentForm
 from django.views.generic.detail import DetailView
 from attendance_management.settings import BASE_DIR
+from django.core.files.storage import FileSystemStorage
+from django.core.files.base import ContentFile
+from django.core.files import File  
+import urllib
+from PIL import Image
+import os
 
 # Create your views here.
 
@@ -155,6 +162,21 @@ class CourseDetail(DetailView):
             'att' : att,
         }
         return render(request,'role/course_detail.html',content)
+
+def profile(request):
+    if request.method=='POST':
+        st =Student.objects.filter(user=request.user)
+        form = StudentForm(request.POST,request.FILES,instance = st[0],initial={'name': st[0].name})
+        if form.is_valid():
+            form.save()
+    else :
+        st =Student.objects.filter(user=request.user)
+        form = StudentForm(instance = st[0])
+    context = {
+        'st' : st[0],
+        'form' : form
+    }        
+    return render(request,'role/profile.html',context)
 
 
 

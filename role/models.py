@@ -48,7 +48,7 @@ class Student(models.Model):
     email =models.EmailField(max_length=50)
     roll_no = models.BigIntegerField()
     course = models.ManyToManyField(Course, related_name='student', blank=True)
-    image = models.ImageField(blank=True, null=True)
+    image = models.ImageField(blank=True, null=True,default='default.png',upload_to='profile_pics/')
 
 
     def ismycourse(self,course):
