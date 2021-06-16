@@ -1,6 +1,10 @@
-
 import cv2
 import numpy as np
+import base64
+from .models import AttendanceDetail 
+from io import BytesIO
+import matplotlib.pyplot as plt
+import seaborn as sns
 from attendance_management.settings import BASE_DIR
 # Load HAAR face classifier
 
@@ -65,8 +69,42 @@ def facestore(request):
     print("Collecting Samples Complete")
 
 
+def get_attendance_from_id(val):
+    att = AttendanceDetail.objects.get(id=val)
+    return att
 
 
+def get_graph():
+    buffer = BytesIO()
+    plt.savefig(buffer, format='png')
+    buffer.seek(0)
+    image_png = buffer.getvalue()
+    graph = base64.b64encode(image_png)
+    graph = graph.decode('utf-8')
+    buffer.close()
+    return graph
+
+def get_chart(chart_type, data, results_by, **kwargs):
+    plt.switch_backend('AGG')
+    fig = plt.figure(figsize=(10, 4))
+    key = results_by
+    d = data
+    if chart_type == '#1':
+        print('bar chart')
+        #plt.bar(d[key], da['total_price'])
+        sns.barplot(x=key, y='status', data=d)
+    elif chart_type == '#2':
+        print('pie chrt')
+        plt.pie(data=d, x='status', labels=d[key].values)
+    elif chart_type == '#3':
+        print('line chart')
+        plt.plot(d[key], d['status'],
+                 color='green', marker='o', linestyle='dashed')
+    else:
+        print('ups...failed o identify the chart type')
+    plt.tight_layout()
+    chart = get_graph()
+    return chart
 
 
 

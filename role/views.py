@@ -3,9 +3,10 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from .models import Student, Attendance, Course, AttendanceDetail
+from django.http import JsonResponse
 from django.contrib.auth import authenticate
 from django.contrib.auth import login as auth_login
-from .utils import facestore
+from .utils import facestore, get_attendance_from_id, get_chart
 from .forms import StudentForm
 from django.views.generic.detail import DetailView
 from attendance_management.settings import BASE_DIR
@@ -14,7 +15,10 @@ from django.core.files.base import ContentFile
 from django.core.files import File  
 import urllib
 from PIL import Image
+import pandas as pd
 import os
+from datetime import timedelta
+from django.utils import timezone
 
 # Create your views here.
 
@@ -52,15 +56,15 @@ def register(request):
 
 def dashboard(request):
     if request.method == 'POST':
-        print('yo')
         if request.POST.get("train"):
-            print('hello')
             facestore(request)
         if request.POST.get("course"):
             return redirect('addcourse')
 
     std = Student.objects.filter(user=request.user)
     att = Attendance.objects.filter(student=std[0])
+    fro = timezone.now().date() - timedelta(days=7)
+    to = timezone.now().date()
     count=0
     for sub in att:
         if sub.percentage<75:
@@ -76,12 +80,24 @@ def dashboard(request):
         att = Attendance.objects.filter(course = item,student = st)
         for ok in att:
             finalval.append(ok)
+
     context = {
         'std' : std,
         'finalval' : finalval,
-        'count' : count
+        'count' : count,
     }
     return render(request, 'role/dashboard.html',context)
+
+def get_data(request,*args,**kwargs):
+    labels = ["Present","Absent"] 
+    data = [10,20]
+    data = {
+     "data" : data,
+     "labels" : labels,
+     "customers" : 20, 
+    }
+    return JsonResponse(data)
+
 
 
 def addcourse(request):

@@ -32,6 +32,24 @@
   <link href="{% static '/role/css/material-dashboard.css' %}" rel="stylesheet" />
   <!-- CSS Just for demo purpose, don't include it in your project -->
   <link href="{% static '/role/demo/demo.css' %}" rel="stylesheet" />
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.3.2/chart.min.js" integrity="sha512-VCHVc5miKoln972iJPvkQrUYYq7XpxXzvqNfiul1H4aZDwGBGC0lq373KNleaB2LpnC2a/iNfE5zoRYmB4TRDQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 </head>
 
 <body class="dark-edition">
@@ -168,6 +186,7 @@
               <div class="card card-chart">
                 <div class="card-header card-header-success">
                   <div class="ct-chart" id="dailySalesChart"></div>
+                  
                 </div>
                 <div class="card-body">
                   <h4 class="card-title">Your Attendance</h4>
@@ -184,7 +203,8 @@
             <div class="col-xl-4 col-lg-12">
               <div class="card card-chart">
                 <div class="card-header card-header-warning">
-                  <div class="ct-chart" id="websiteViewsChart"></div>
+                 <!-- <div class="ct-chart" id="websiteViewsChart"></div> -->
+                  <canvas id="myChart" width="200" height="110"></canvas>
                 </div>
                 <div class="card-body">
                   <h4 class="card-title">Email Subscriptions</h4>
@@ -702,6 +722,64 @@
   <script src="{% static '/role/js/material-dashboard.js' %}"></script>
   <!-- Material Dashboard DEMO methods, don't include it in your project! -->
   <script src="{% static '/role/demo/demo.js' %}"></script>
+  <script>
+
+  var endpoint = 'chart_data'
+  var mydata = [];
+  var labels = [];
+  $.ajax({
+    method : "GET",
+    url : endpoint,
+    async : false,
+    success : function(data){
+      mydata = data.data ;
+      labels = data.labels;
+      console.log(data.data);
+      console.log(data.labels);
+    },
+    error : function(error_data){
+      console.log(error_data);
+    }
+  })
+
+  
+
+var ctx = document.getElementById('myChart').getContext('2d');
+var myChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: labels,
+        datasets: [{
+            label: '# of Votes',
+            data: mydata,
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(255, 159, 64, 0.2)'
+            ],
+            borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)'
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    }
+});
+</script>
   <script>
     $(document).ready(function() {
       $().ready(function() {

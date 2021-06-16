@@ -70,6 +70,7 @@ class Attendance(models.Model):
     student = models.ForeignKey(Student,on_delete=models.CASCADE)
     class_attended = models.IntegerField()
     total_classes = models.IntegerField()
+    class_left = models.IntegerField(blank=True,null=True)
     percentage = models.IntegerField(blank = True)
 
     class Meta:
@@ -81,6 +82,7 @@ class Attendance(models.Model):
             self.percentage = 0;
         else:
             self.percentage = (self.class_attended)/(self.total_classes)*100
+        self.class_left = self.total_classes - self.class_attended
         return super().save(*args, **kwargs)
 
     def __str__(self):
