@@ -16,9 +16,16 @@ from django.core.files import File
 import urllib
 from PIL import Image
 import pandas as pd
+import json
 import os
+from rest_framework import viewsets
+from rest_framework import permissions
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
 from datetime import timedelta
 from django.utils import timezone
+from django.utils.safestring import mark_safe
+from .serializers import StudentSerializer
 
 # Create your views here.
 
@@ -26,6 +33,16 @@ from django.utils import timezone
 def home(request):
     return render(request, 'role/index.html')
 
+
+@api_view(['GET'])
+def api(request):
+    api_urls = {
+        'register' :'register/',
+        'CourseDetail' : 'dashboard/course<pk>',
+    }
+    std = Student.objects.all()
+    serializer = StudentSerializer(std,many=True)
+    return Response(serializer.data)
 
 def register(request):
     counter=1
@@ -86,7 +103,7 @@ def dashboard(request):
         'finalval' : finalval,
         'count' : count,
     }
-    return render(request, 'role/dashboard.html',context)
+    return render(request,'role/dashboard.html',context)
 
 def get_data(request,*args,**kwargs):
     labels = ["Present","Absent"] 
@@ -178,6 +195,16 @@ class CourseDetail(DetailView):
             'att' : att,
         }
         return render(request,'role/course_detail.html',content)
+
+def room(request, *args,**kwargs):
+    pk = kwargs['pk']
+    cc = Course.objects.get(id=pk)
+    return render(request, 'role/timepass.html', {
+        'room_name': cc,
+        'room_id' : pk,
+        'username' : request.user.username,
+        'cc' : cc,
+    })
 
 def profile(request):
     if request.method=='POST':
