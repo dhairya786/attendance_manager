@@ -222,4 +222,15 @@ def profile(request):
     return render(request,'role/profile.html',context)
 
 
+def mycourses(request):
+    st = Student.objects.filter(user=request.user)[0]  
+    att = Attendance.objects.filter(student = st)
+        
+    context = {
+    'st' : st,
+    'att' : att,
+    }
+    return render(request,'role/mycourse.html',context)
+
+
 
