@@ -118,6 +118,7 @@ class Studymaterial(models.Model):
     course = models.ForeignKey(Course,on_delete=models.CASCADE)
     title = models.CharField(max_length=50)
     file = models.FileField(upload_to='study_material/')
+    video = models.BooleanField(null=True,default=False)
 
     def __str__(self):
         return self.title
