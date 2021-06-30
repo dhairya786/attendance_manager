@@ -1,7 +1,8 @@
 from django.urls import path
-from .views import home, register, dashboard, addcourse, CourseDetail, profile, get_data, room, api, mycourses
+from .views import home, register, dashboard, addcourse, CourseDetail, profile, get_data, room, api, mycourses, pdfview, studymaterial
 urlpatterns = [
     path('', home, name='home'),
+    path('pdfview/',pdfview,name='pdfview'),
     path('register/', register, name='register'),
     path('dashboard/',dashboard, name='dashboard'),
     path('dashboard/addcourse',addcourse,name='addcourse'),
@@ -11,4 +12,5 @@ urlpatterns = [
     path('dashboard/course<int:pk>/room', room, name='room'),
     path('api/',api,name='api'),
     path('mycourses/',mycourses,name='mycourses'),
+    path('dashboard/course<int:pk>/study',studymaterial,name='studymaterial')
 ]

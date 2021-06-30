@@ -114,3 +114,11 @@ class Message(models.Model):
     def last_10_messages(self):
         return Message.objects.order_by('-timestamp').all()[:10]
 
+class Studymaterial(models.Model):
+    course = models.ForeignKey(Course,on_delete=models.CASCADE)
+    title = models.CharField(max_length=50)
+    file = models.FileField(upload_to='study_material/')
+
+    def __str__(self):
+        return self.title
+

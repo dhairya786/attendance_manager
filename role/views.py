@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
-from .models import Student, Attendance, Course, AttendanceDetail
+from .models import Student, Attendance, Course, AttendanceDetail, Studymaterial
 from django.http import JsonResponse
 from django.contrib.auth import authenticate
 from django.contrib.auth import login as auth_login
@@ -26,6 +26,7 @@ from datetime import timedelta
 from django.utils import timezone
 from django.utils.safestring import mark_safe
 from .serializers import StudentSerializer
+from django.http import FileResponse, Http404
 
 # Create your views here.
 
@@ -231,6 +232,24 @@ def mycourses(request):
     'att' : att,
     }
     return render(request,'role/mycourse.html',context)
+
+def studymaterial(request,*args,**kwargs):
+    pk = kwargs['pk']
+    cc = Course.objects.get(id=pk)
+    mat = Studymaterial.objects.filter(course=cc)
+    return render(request,'role/study.html',{
+        'mat' : mat,
+        'cc' : cc,
+        })
+
+
+def pdfview(request):
+    try:
+        print('in hu saale')
+        return FileResponse(open('study_material/CPG123.pdf', 'rb'), content_type='application/pdf')
+    except FileNotFoundError:
+        raise Http404()
+
 
 
 
