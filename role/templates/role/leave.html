@@ -1,18 +1,5 @@
-<!--
-=========================================================
-* Material Dashboard Dark Edition - v2.1.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/material-dashboard-dark
-* Copyright 2019 Creative Tim (http://www.creative-tim.com)
-
-* Coded by www.creative-tim.com
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
--->
 {% load static %}
+{% load crispy_forms_tags %}
 <!DOCTYPE html>
 <html lang="en">
 
@@ -32,6 +19,7 @@
   <link href="{% static '/role/css/material-dashboard.css' %}" rel="stylesheet" />
   <!-- CSS Just for demo purpose, don't include it in your project -->
   <link href="{% static '/role/demo/demo.css' %}" rel="stylesheet" />
+  <link href="https://vjs.zencdn.net/7.11.4/video-js.css" rel="stylesheet" />
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.3.2/chart.min.js" integrity="sha512-VCHVc5miKoln972iJPvkQrUYYq7XpxXzvqNfiul1H4aZDwGBGC0lq373KNleaB2LpnC2a/iNfE5zoRYmB4TRDQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
@@ -53,8 +41,16 @@
 </head>
 
 <body class="dark-edition">
+  <input type="hidden" id="refreshed" value="no">
+ <script type="text/javascript">
+onload=function(){
+var e=document.getElementById("refreshed");
+if(e.value=="no")e.value="yes";
+else{e.value="no";location.reload();}
+}
+</script>
   <div class="wrapper ">
-    <div class="sidebar" data-color="purple" data-background-color="black" data-image="{% static 'role/img/sidebar-2.jpg' %}">
+    <div class="sidebar" data-color="green" data-background-color="black" data-image="{% static 'role/img/sidebar-2.jpg' %}">
       <!--
         Tip 1: You can change the color of the sidebar using: data-color="purple | azure | green | orange | danger"
 
@@ -65,7 +61,7 @@
         </a></div>
       <div class="sidebar-wrapper">
         <ul class="nav">
-          <li class="nav-item">
+          <li class="nav-item active  ">
             <a class="nav-link" href="{% url 'dashboard' %}">
               <i class="material-icons">dashboard</i>
               <p>Dashboard</p>
@@ -83,8 +79,8 @@
               <p>Add Course</p>
             </a>
           </li>
-          <li class="nav-item active">
-            <a class="nav-link" href="./typography.html">
+          <li class="nav-item ">
+            <a class="nav-link" href="{% url 'mycourses' %}">
               <i class="material-icons">library_books</i>
               <p>Your Courses</p>
             </a>
@@ -116,7 +112,7 @@
         </ul>
       </div>
     </div>
-    <div class="main-panel">
+    <div class="main-panel"   >
       <!-- Navbar -->
       <nav class="navbar navbar-expand-lg navbar-transparent navbar-absolute fixed-top " id="navigation-example">
         <div class="container-fluid">
@@ -177,66 +173,141 @@
         </div>
       </nav>
       <!-- End Navbar -->
-      <!-- End Navbar -->
       <div class="content">
-        <div class="container-fluid">
-          <div class="card">
-            <div class="card-header card-header-primary">
-              <h4 class="card-title">Your Courses</h4>
-              <p class="card-category">Click on them to access resources.
-              </p>
-            </div>
-            <div class="card-body">
-              <div class="row">
-                {% for course in st.course.all %}
-                {% for obj in att %}
-                {% ifequal obj.course course %}
-                <div class="col-xl-4 col-lg-12">
-              <div class="card card-chart">
-                {% if obj.percentage >= 75 %}
-                <div class="card-header card-header-success" style="height: 100px;">
-                  {% elif obj.percentage >= 45 %}
-                  <div class="card-header card-header-warning" style="height: 100px;">
-                    {% else %}
-                    <div class="card-header card-header-danger" style="height: 100px;">
-                      {% endif %}
-                      <a href="{% url 'coursedetail' pk=course.pk %}">
-                  <h4> {{course.name}} </h4>
-                </a>
-                  <p>{{obj.percentage}}% Attendance</p>
+        <div class="container-fluid" >
+          <div class="row">
+            <div class="col-md-12" >
+              <div class="card"  >
+                <div class="card-header card-header-primary" >
+                  <h4 class="card-title ">Leave Requests</h4>
+                  <p class="card-category">For {{cc.name}}</p>
                 </div>
                 <div class="card-body">
-                  <a href="{% url 'room' pk=course.pk %}">
-                  <button class="btn btn-primary col-lg-12">Chat Room</button>
-                </a>
-                <a href="{% url 'studymaterial' pk=course.pk %}">
-                  <button class="btn btn-primary col-lg-12">Study Material</button>
-                </a>
-                <a href="{% url 'leave' pk=course.pk %}">
-                  <button class="btn btn-primary col-lg-12">Leave Requests</button>
-                </a>
-              </div>
-                <div class="card-footer">
-                  <div class="stats">
-                    
+                  <div class="table-responsive">
+                    <table class="table">
+                      <thead class=" text-primary">
+                        <th>
+                          From
+                        </th>
+                        <th>
+                          To
+                        </th>
+                        <th>
+                          Reason For Leave
+                        </th>
+                        <th>
+                          Status
+                        </th>
+                        <th>
+                          Delete Field
+                        </th>
+                      </thead>
+                      <tbody>
+                       {% for l in leave %}
+                       <tr>
+                        <td>
+                          {{l.fro}}
+                        </td>
+                        <td>
+                          {{l.to}}
+                        </td>
+                        <td>
+                          {{l.title}}
+                          and
+                          {{cc.pk}}
+                        </td>
+                        <td>
+                          {% if l.isapproved %}
+                          <div style="color: green;">
+                            Approved
+                          </div>
+                          {% else %}
+                          <div style="color: yellow;">
+                            Pending
+                          </div>
+                          {% endif %}
+                        </td>
+
+                        <td>
+
+                         <a href="/delete/{{cc.pk}}/{{l.pk}}/" ><button type="button" class="btn btn-warning" data-toggle="modal" data-target="#exampleModalCenter" id="l.pk" >Delete </button>
+                         </a>
+                        </td>
+
+
+                       </tr>
+                       {% endfor %}
+                      </tbody>
+                    </table>
+                    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#exampleModal">Add New </button>
                   </div>
                 </div>
               </div>
             </div>
-            {% endifequal %}
-            {% endfor %}
-            {% endfor %}
-             
             
-                
-                
+          
+                  </div>
+                </div>
               </div>
-            </div>
-           
-          </div>
-        </div>
+
+
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Add New Leave Request</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
       </div>
-       <footer class="footer">
+      <div class="modal-body">
+        <div class="form-group">
+      <label for="inputsm" style="color : dimgrey;">Title</label>
+      <input class="form-control" id="title" type="text" style="color: black;">
+      </div>
+       <div class="form-group">
+    <label for="details" style="color : dimgrey;">Detailed Reason</label>
+
+    <textarea class="form-control" id="details" rows="3" style="color : black; margin-top: 13px;"></textarea>
+  </div>
+  <label style="color : dimgrey;" for="fro">From </label> 
+  <input type="date" id="fro">
+  <label style="color : dimgrey;" for="to">To </label> 
+  <input type="date" id="to">
+      </div>
+     <!--<form method="post" id="form">
+        {% csrf_token %}
+      {{form|crispy}} -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary" id="ajax">Add new leave</button>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Delete Field</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        Are you sure you want to delete this request?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-danger">Delete</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+     <footer class="footer">
         <div class="container-fluid">
           <nav class="float-left">
             <ul>
@@ -360,64 +431,7 @@
   <script src="{% static '/role/js/material-dashboard.js' %}"></script>
   <!-- Material Dashboard DEMO methods, don't include it in your project! -->
   <script src="{% static '/role/demo/demo.js' %}"></script>
-  <script>
-
-  var endpoint = 'chart_data'
-  var mydata = [];
-  var labels = [];
-  $.ajax({
-    method : "GET",
-    url : endpoint,
-    async : false,
-    success : function(data){
-      mydata = data.data ;
-      labels = data.labels;
-      console.log(data.data);
-      console.log(data.labels);
-    },
-    error : function(error_data){
-      console.log(error_data);
-    }
-  })
-
-  
-
-var ctx = document.getElementById('myChart').getContext('2d');
-var myChart = new Chart(ctx, {
-    type: 'bar',
-    data: {
-        labels: labels,
-        datasets: [{
-            label: '# of Votes',
-            data: mydata,
-            backgroundColor: [
-                'rgba(255, 99, 132, 0.2)',
-                'rgba(54, 162, 235, 0.2)',
-                'rgba(255, 206, 86, 0.2)',
-                'rgba(75, 192, 192, 0.2)',
-                'rgba(153, 102, 255, 0.2)',
-                'rgba(255, 159, 64, 0.2)'
-            ],
-            borderColor: [
-                'rgba(255, 99, 132, 1)',
-                'rgba(54, 162, 235, 1)',
-                'rgba(255, 206, 86, 1)',
-                'rgba(75, 192, 192, 1)',
-                'rgba(153, 102, 255, 1)',
-                'rgba(255, 159, 64, 1)'
-            ],
-            borderWidth: 1
-        }]
-    },
-    options: {
-        scales: {
-            y: {
-                beginAtZero: true
-            }
-        }
-    }
-});
-</script>
+ 
   <script>
     $(document).ready(function() {
       $().ready(function() {
@@ -586,6 +600,24 @@ var myChart = new Chart(ctx, {
       md.initDashboardPageCharts();
 
     });
+  </script>
+  <script src="https://vjs.zencdn.net/7.11.4/video.min.js"></script>
+   <script>
+    console.log("hello");
+    $("#ajax").click(function(){
+   var requestData = { 'student' : '{{std.pk}}', 'course' : '{{cc.pk}}' ,title: $('#title').val() , 'details': $('#details').val() , 'fro': $('#fro').val() , 'to': $('#to').val()}
+   console.log(requestData);
+        $.ajax({
+        type: 'POST',
+        url : "{% url 'save' %}",
+        data : JSON.stringify(requestData),
+        processData: false,
+        contentType: 'application/json',
+        success : function(data){
+          location.reload();
+        }
+      })
+        });
   </script>
 </body>
 

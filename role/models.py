@@ -123,3 +123,14 @@ class Studymaterial(models.Model):
     def __str__(self):
         return self.title
 
+class Leave(models.Model):
+    student = models.ForeignKey(Student,on_delete=models.CASCADE)
+    course = models.ForeignKey(Course,on_delete=models.CASCADE)
+    title = models.CharField(max_length = 30)
+    details = models.TextField()
+    isapproved = models.BooleanField(default=False)
+    fro = models.DateField(null=True)
+    to = models.DateField(null=True)
+    def __str__(self):
+        return f"{self.student.name} - {self.title} - {self.course.name}" 
+

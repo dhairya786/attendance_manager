@@ -2,12 +2,12 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
-from .models import Student, Attendance, Course, AttendanceDetail, Studymaterial
+from .models import Student, Attendance, Course, AttendanceDetail, Studymaterial, Leave
 from django.http import JsonResponse
 from django.contrib.auth import authenticate
 from django.contrib.auth import login as auth_login
 from .utils import facestore, get_attendance_from_id, get_chart
-from .forms import StudentForm
+from .forms import StudentForm, LeaveForm
 from django.views.generic.detail import DetailView
 from attendance_management.settings import BASE_DIR
 from django.core.files.storage import FileSystemStorage
@@ -27,6 +27,8 @@ from django.utils import timezone
 from django.utils.safestring import mark_safe
 from .serializers import StudentSerializer
 from django.http import FileResponse, Http404
+from django.views.decorators.csrf import csrf_exempt
+from django.http import HttpResponse
 
 # Create your views here.
 
@@ -249,6 +251,42 @@ def pdfview(request):
         return FileResponse(open('study_material/CPG123.pdf', 'rb'), content_type='application/pdf')
     except FileNotFoundError:
         raise Http404()
+
+def leaverequest(request,*args,**kwargs):
+    pk = kwargs['pk']
+    cc = Course.objects.get(id=pk)
+    std = Student.objects.filter(user=request.user)[0]
+    leave = Leave.objects.filter(student = std, course = cc)
+    leaveform = LeaveForm()
+    context = {
+    'leave' : leave,
+    'std' : std,
+    'cc' : cc,
+    'form' : leaveform,
+    }
+    return render(request,'role/leave.html',context)
+
+@csrf_exempt
+def save(request):
+    print('good')
+    data = json.loads(request.body)
+    st = Student.objects.get(id=data['student'])
+    cc = Course.objects.get(id=data['course'])
+    obj = Leave.objects.create(student = st,course=cc,title=data['title'],fro=data['fro'],to=data['to'])
+    obj.save()
+    return JsonResponse({
+        "msg" : "success"
+        })
+
+
+def delete(request, *args,**kwargs):
+    print(kwargs)
+    lpk = kwargs['pk']
+    post = Leave.objects.get(pk=lpk).delete()
+    cpk = kwargs['course_pk']
+    return redirect('leave',pk=cpk)
+
+        
 
 
 
