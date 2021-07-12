@@ -61,7 +61,7 @@ else{e.value="no";location.reload();}
         </a></div>
       <div class="sidebar-wrapper">
         <ul class="nav">
-          <li class="nav-item active  ">
+          <li class="nav-item">
             <a class="nav-link" href="{% url 'dashboard' %}">
               <i class="material-icons">dashboard</i>
               <p>Dashboard</p>
@@ -79,13 +79,13 @@ else{e.value="no";location.reload();}
               <p>Add Course</p>
             </a>
           </li>
-          <li class="nav-item ">
+          <li class="nav-item active">
             <a class="nav-link" href="{% url 'mycourses' %}">
               <i class="material-icons">library_books</i>
               <p>Your Courses</p>
             </a>
           </li>
-          <li class="nav-item ">
+         <!-- <li class="nav-item ">
             <a class="nav-link" href="./icons.html">
               <i class="material-icons">bubble_chart</i>
               <p>Icons</p>
@@ -103,7 +103,7 @@ else{e.value="no";location.reload();}
               <p>Notifications</p>
             </a>
           </li>
-          <!-- <li class="nav-item active-pro ">
+          <li class="nav-item active-pro ">
                 <a class="nav-link" href="./upgrade.html">
                     <i class="material-icons">unarchive</i>
                     <p>Upgrade to PRO</p>
@@ -213,8 +213,6 @@ else{e.value="no";location.reload();}
                         </td>
                         <td>
                           {{l.title}}
-                          and
-                          {{cc.pk}}
                         </td>
                         <td>
                           {% if l.isapproved %}
@@ -225,13 +223,14 @@ else{e.value="no";location.reload();}
                           <div style="color: yellow;">
                             Pending
                           </div>
-                          {% endif %}
+                          
                         </td>
 
                         <td>
 
                          <a href="/delete/{{cc.pk}}/{{l.pk}}/" ><button type="button" class="btn btn-warning" data-toggle="modal" data-target="#exampleModalCenter" id="l.pk" >Delete </button>
                          </a>
+                         {% endif %}
                         </td>
 
 
@@ -312,8 +311,8 @@ else{e.value="no";location.reload();}
           <nav class="float-left">
             <ul>
               <li>
-                <a href="https://www.creative-tim.com">
-                  Creative Tim
+                <a href="https://www.thapar.edu">
+                  College Website
                 </a>
               </li>
               <li>
@@ -335,7 +334,7 @@ else{e.value="no";location.reload();}
           </nav>
           <div class="copyright float-right" id="date">
             , made with <i class="material-icons">favorite</i> by
-            <a href="https://www.creative-tim.com" target="_blank">Creative Tim</a> for a better web.
+            <a href="https://www.creative-tim.com" target="_blank">Thaparians</a> for a better web.
           </div>
         </div>
       </footer>

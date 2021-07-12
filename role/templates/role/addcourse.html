@@ -23,7 +23,7 @@
 
 <body class="dark-edition">
   <div class="wrapper ">
-    <div class="sidebar" data-color="purple" data-background-color="black" data-image="{% static 'role/img/sidebar-2.jpg' %}">
+    <div class="sidebar" data-color="green" data-background-color="black" data-image="{% static 'role/img/sidebar-2.jpg' %}">
       <!--
         Tip 1: You can change the color of the sidebar using: data-color="purple | azure | green | orange | danger"
 
@@ -53,12 +53,12 @@
             </a>
           </li>
           <li class="nav-item ">
-            <a class="nav-link" href="./typography.html">
+            <a class="nav-link" href="{% url 'mycourses' %}">
               <i class="material-icons">library_books</i>
-              <p>Typography</p>
+              <p>Your Courses</p>
             </a>
           </li>
-          <li class="nav-item ">
+        <!--  <li class="nav-item ">
             <a class="nav-link" href="./icons.html">
               <i class="material-icons">bubble_chart</i>
               <p>Icons</p>
@@ -76,7 +76,7 @@
               <p>Notifications</p>
             </a>
           </li>
-          <!-- <li class="nav-item active-pro ">
+          <li class="nav-item active-pro ">
                 <a class="nav-link" href="./upgrade.html">
                     <i class="material-icons">unarchive</i>
                     <p>Upgrade to PRO</p>
@@ -413,8 +413,8 @@
           <nav class="float-left">
             <ul>
               <li>
-                <a href="https://www.creative-tim.com">
-                  Creative Tim
+                <a href="https://www.thapar.edu">
+                  College Website
                 </a>
               </li>
               <li>
@@ -436,7 +436,7 @@
           </nav>
           <div class="copyright float-right" id="date">
             , made with <i class="material-icons">favorite</i> by
-            <a href="https://www.creative-tim.com" target="_blank">Creative Tim</a> for a better web.
+            <a href="https://www.creative-tim.com" target="_blank">Thaparians</a> for a better web.
           </div>
         </div>
       </footer>

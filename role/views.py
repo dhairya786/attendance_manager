@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
-from .models import Student, Attendance, Course, AttendanceDetail, Studymaterial, Leave
+from .models import Student, Attendance, Course, AttendanceDetail, Studymaterial, Leave, Mark
 from django.http import JsonResponse
 from django.contrib.auth import authenticate
 from django.contrib.auth import login as auth_login
@@ -272,7 +272,7 @@ def save(request):
     data = json.loads(request.body)
     st = Student.objects.get(id=data['student'])
     cc = Course.objects.get(id=data['course'])
-    obj = Leave.objects.create(student = st,course=cc,title=data['title'],fro=data['fro'],to=data['to'])
+    obj = Leave.objects.create(student = st,course=cc,title=data['title'],details=data['details'],fro=data['fro'],to=data['to'])
     obj.save()
     return JsonResponse({
         "msg" : "success"
@@ -285,6 +285,18 @@ def delete(request, *args,**kwargs):
     post = Leave.objects.get(pk=lpk).delete()
     cpk = kwargs['course_pk']
     return redirect('leave',pk=cpk)
+
+
+def marks(request,*args,**kwargs):
+    pk = kwargs['pk']
+    cc = Course.objects.get(id=pk)
+    std = Student.objects.filter(user=request.user)[0]
+    mark = Mark.objects.filter(student=std,course=cc)
+    context = {
+    'cc' : cc,
+    'mark' : mark,
+    }
+    return render(request,'role/marks.html',context)
 
         
 

@@ -132,7 +132,7 @@
 
 <body class="dark-edition">
   <div class="wrapper ">
-    <div class="sidebar" data-color="purple" data-background-color="black" data-image="{% static 'role/img/sidebar-2.jpg' %}">
+    <div class="sidebar" data-color="green" data-background-color="black" data-image="{% static 'role/img/sidebar-2.jpg' %}">
       <!--
         Tip 1: You can change the color of the sidebar using: data-color="purple | azure | green | orange | danger"
 
@@ -143,7 +143,7 @@
         </a></div>
       <div class="sidebar-wrapper">
         <ul class="nav">
-          <li class="nav-item active  ">
+          <li class="nav-item">
             <a class="nav-link" href="{% url 'dashboard' %}">
               <i class="material-icons">dashboard</i>
               <p>Dashboard</p>
@@ -161,13 +161,13 @@
               <p>Add Course</p>
             </a>
           </li>
-          <li class="nav-item ">
-            <a class="nav-link" href="./typography.html">
+          <li class="nav-item active">
+            <a class="nav-link" href="{% url 'mycourses' %}">
               <i class="material-icons">library_books</i>
-              <p>Typography</p>
+              <p>Your Courses</p>
             </a>
           </li>
-          <li class="nav-item ">
+         <!-- <li class="nav-item ">
             <a class="nav-link" href="./icons.html">
               <i class="material-icons">bubble_chart</i>
               <p>Icons</p>
@@ -185,7 +185,7 @@
               <p>Notifications</p>
             </a>
           </li>
-          <!-- <li class="nav-item active-pro ">
+          <li class="nav-item active-pro ">
                 <a class="nav-link" href="./upgrade.html">
                     <i class="material-icons">unarchive</i>
                     <p>Upgrade to PRO</p>

@@ -54,7 +54,7 @@
 
 <body class="dark-edition">
   <div class="wrapper ">
-    <div class="sidebar" data-color="purple" data-background-color="black" data-image="{% static 'role/img/sidebar-2.jpg' %}">
+    <div class="sidebar" data-color="green" data-background-color="black" data-image="{% static 'role/img/sidebar-2.jpg' %}">
       <!--
         Tip 1: You can change the color of the sidebar using: data-color="purple | azure | green | orange | danger"
 
@@ -89,7 +89,7 @@
               <p>Your Courses</p>
             </a>
           </li>
-          <li class="nav-item ">
+        <!--  <li class="nav-item ">
             <a class="nav-link" href="./icons.html">
               <i class="material-icons">bubble_chart</i>
               <p>Icons</p>
@@ -107,7 +107,7 @@
               <p>Notifications</p>
             </a>
           </li>
-          <!-- <li class="nav-item active-pro ">
+          <li class="nav-item active-pro ">
                 <a class="nav-link" href="./upgrade.html">
                     <i class="material-icons">unarchive</i>
                     <p>Upgrade to PRO</p>
@@ -215,6 +215,9 @@
                 <a href="{% url 'leave' pk=course.pk %}">
                   <button class="btn btn-primary col-lg-12">Leave Requests</button>
                 </a>
+                <a href="{% url 'marks' pk=course.pk %}">
+                  <button class="btn btn-primary col-lg-12">Your Marks</button>
+                </a>
               </div>
                 <div class="card-footer">
                   <div class="stats">
@@ -241,8 +244,8 @@
           <nav class="float-left">
             <ul>
               <li>
-                <a href="https://www.creative-tim.com">
-                  Creative Tim
+                <a href="https://www.thapar.edu">
+                  College Website
                 </a>
               </li>
               <li>
@@ -264,7 +267,7 @@
           </nav>
           <div class="copyright float-right" id="date">
             , made with <i class="material-icons">favorite</i> by
-            <a href="https://www.creative-tim.com" target="_blank">Creative Tim</a> for a better web.
+            <a href="https://www.creative-tim.com" target="_blank">Thaparians</a> for a better web.
           </div>
         </div>
       </footer>
@@ -275,7 +278,7 @@
       </script>
     </div>
   </div>
-  <div class="fixed-plugin">
+ <!-- <div class="fixed-plugin">
     <div class="dropdown show-dropdown">
       <a href="#" data-toggle="dropdown">
         <i class="fa fa-cog fa-2x"> </i>
@@ -323,7 +326,7 @@
                 <a href="https://www.creative-tim.com/product/material-dashboard-pro" target="_blank" class="btn btn-warning btn-block">
                   Get the pro version
                 </a>
-            </li> -->
+            </li> 
         <li class="button-container">
           <a href="https://demos.creative-tim.com/material-dashboard-dark/docs/2.0/getting-started/introduction.html" target="_blank" class="btn btn-default btn-block">
             View Documentation
@@ -341,7 +344,7 @@
         </li>
       </ul>
     </div>
-  </div>
+  </div>-->
   <!--   Core JS Files   -->
   <script src="{% static '/role/js/core/jquery.min.js' %}"></script>
   <script src="{% static '/role/js/core/popper.min.js' %}"></script>

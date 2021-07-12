@@ -93,8 +93,8 @@
               <i class="material-icons">notifications</i>
               <p>Notifications</p>
             </a>
-          </li>
-          <li class="nav-item active-pro ">
+          </li>-->
+          <!-- <li class="nav-item active-pro ">
                 <a class="nav-link" href="./upgrade.html">
                     <i class="material-icons">unarchive</i>
                     <p>Upgrade to PRO</p>
@@ -178,91 +178,35 @@
                     <table class="table">
                       <thead class=" text-primary">
                         <th>
-                          Title
+                          Field
                         </th>
                         <th>
-                          Name of PDF
+                          Obtained
                         </th>
                         <th>
-                          Option
+                          Total
                         </th>
                       </thead>
                       <tbody>
-                        {% for m in mat %}
-                        {% if m.video %}
-                        {% else %}
+                        {% for m in mark %}
                         <tr>
                           <td>
-                            {{m.title}}
+                            {{m.field}}
                           </td>
                           <td>
-                            {{m.file}}
+                            {{m.obtained}}
                           </td>
                           <td>
-                            <a href="{{m.file.url}}">
-                            Preview
-                          </a>
+                            {{m.total}}
                           </td>
                         </tr>
-                        {% endif %}
-                       {% endfor %}
+                        {% endfor %}
                       </tbody>
                     </table>
                   </div>
                 </div>
               </div>
             </div>
-            <div class="col-md-12">
-              <div class="card">
-                <div class="card-header card-header-primary">
-                  <h4 class="card-title ">Lecture Videos</h4>
-                  <p class="card-category">For {{cc.name}}</p>
-                </div>
-                <div class="card-body">
-                  <div class="table-responsive">
-                     <table class="table">
-                      <tbody>
-                    {% for m in mat %}
-                    {% if m.video %}
-
-                    <tr>
-
-                      <td>
-                         <h3 style="margin-bottom: 25px"> {{m.title}} </h3>
-                    <video
-                        id="my-video"
-                        class="video-js"
-                        controls
-                        preload="auto"
-                        width="900"
-                        height="500"
-                        poster=""
-                        data-setup="{}"
-                      >
-                        <source src="{{m.file.url}}" type="video/mp4" />
-                      </video>
-                    
-                    
-                      <a href="{{m.file.url}}" download> 
-                        <button class="btn btn-success" style="margin-top: 25px;">Download</button> </a>
-                    </td>
-                  </tr>
-
-                 <!--   <div class="container">
-                      <h3>{{m.title}}</h3>
-                    <video class="embed-responsive embed-responsive-4by3" controls="controls">
-                      <source src="{{m.file.url}}" type="video/mp4" />
-                    </video>
-                  </div> -->
-                    {% endif %}
-                    {% endfor %}
-                  </tbody>
-                </table>
-                  </div>
-                </div>
-              </div>
-            </div>
-          
                   </div>
                 </div>
               </div>
@@ -275,8 +219,8 @@
           <nav class="float-left">
             <ul>
               <li>
-                <a href="https://www.creative-tim.com">
-                  Creative Tim
+                <a href="https://www.thapar.edu">
+                  College Website
                 </a>
               </li>
               <li>
@@ -298,7 +242,7 @@
           </nav>
           <div class="copyright float-right" id="date">
             , made with <i class="material-icons">favorite</i> by
-            <a href="https://www.creative-tim.com" target="_blank">Creative Tim</a> for a better web.
+            <a href="https://www.creative-tim.com" target="_blank">Thaparians</a> for a better web.
           </div>
         </div>
       </footer>

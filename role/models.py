@@ -16,6 +16,17 @@ BRANCH_CHOICES = [
     ('che','CHE')
 ]
 
+FIELD_CHOICES = [
+    ('LE1','LE1'),
+    ('LE2','LE2'),
+    ('LE3','LE3'),
+    ('SES1','SES1'),
+    ('SES2','SES2'),
+    ('SES3','SES3'),
+    ('MST','MST'),
+    ('EST','EST'),
+]
+
 
 
 class Teacher(models.Model):
@@ -133,4 +144,16 @@ class Leave(models.Model):
     to = models.DateField(null=True)
     def __str__(self):
         return f"{self.student.name} - {self.title} - {self.course.name}" 
+
+
+class Mark(models.Model):
+    student = models.ForeignKey(Student,on_delete=models.CASCADE)
+    course = models.ForeignKey(Course,on_delete=models.CASCADE)
+    obtained = models.IntegerField()
+    total = models.IntegerField()
+    field = models.CharField(max_length=30,choices=FIELD_CHOICES)
+
+    def __str__(self):
+        return f"{self.student.name} in {self.course.name} for {self.field}"
+
 
