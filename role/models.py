@@ -156,4 +156,12 @@ class Mark(models.Model):
     def __str__(self):
         return f"{self.student.name} in {self.course.name} for {self.field}"
 
+class Sgpa(models.Model):
+    student = models.ForeignKey(Student,on_delete=models.CASCADE)
+    semester = models.IntegerField()
+    sgpa = models.DecimalField(max_digits = 7,decimal_places=2)
+
+    def __str__(self):
+        return f"{self.student.name} got {self.sgpa} in {self.semester} semester"
+
 

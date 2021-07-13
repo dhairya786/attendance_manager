@@ -70,19 +70,19 @@
               <p>Add Course</p>
             </a>
           </li>
-          <li class="nav-item active">
+          <li class="nav-item ">
             <a class="nav-link" href="{% url 'mycourses' %}">
               <i class="material-icons">library_books</i>
               <p>Your Courses</p>
             </a>
           </li>
-         <li class="nav-item ">
-            <a class="nav-link" href="{% url 'cgpa' %}">
+         <li class="nav-item active">
+            <a class="nav-link" href="./icons.html">
               <i class="material-icons">bubble_chart</i>
               <p>Your Cgpa</p>
             </a>
           </li>
-          <!--<li class="nav-item ">
+         <!-- <li class="nav-item ">
             <a class="nav-link" href="./map.html">
               <i class="material-icons">location_ons</i>
               <p>Maps</p>
@@ -93,8 +93,8 @@
               <i class="material-icons">notifications</i>
               <p>Notifications</p>
             </a>
-          </li>
-          <li class="nav-item active-pro ">
+          </li>-->
+          <!-- <li class="nav-item active-pro ">
                 <a class="nav-link" href="./upgrade.html">
                     <i class="material-icons">unarchive</i>
                     <p>Upgrade to PRO</p>
@@ -170,99 +170,45 @@
             <div class="col-md-12" >
               <div class="card"  >
                 <div class="card-header card-header-primary" >
-                  <h4 class="card-title ">Study Material</h4>
-                  <p class="card-category">For {{cc.name}}</p>
+                  <h4 class="card-title ">Semester Wise SGPA</h4>
+                  <p class="card-category"></p>
                 </div>
                 <div class="card-body">
                   <div class="table-responsive">
                     <table class="table">
                       <thead class=" text-primary">
                         <th>
-                          Title
+                          Semester
                         </th>
                         <th>
-                          Name of PDF
-                        </th>
-                        <th>
-                          Option
+                          Obtained
                         </th>
                       </thead>
                       <tbody>
-                        {% for m in mat %}
-                        {% if m.video %}
-                        {% else %}
+                        {% for s in sg %}
                         <tr>
                           <td>
-                            {{m.title}}
+                            {{s.semester}}
                           </td>
                           <td>
-                            {{m.file}}
-                          </td>
-                          <td>
-                            <a href="{{m.file.url}}">
-                            Preview
-                          </a>
+                            {{s.sgpa}}
                           </td>
                         </tr>
-                        {% endif %}
-                       {% endfor %}
+                        {% endfor %}
+                        <tr>
+                          <td>
+                            Overall CGPA
+                          </td>
+                          <td>
+                            {{mysum}}
+                          </td>
+                        </tr>
                       </tbody>
                     </table>
                   </div>
                 </div>
               </div>
             </div>
-            <div class="col-md-12">
-              <div class="card">
-                <div class="card-header card-header-primary">
-                  <h4 class="card-title ">Lecture Videos</h4>
-                  <p class="card-category">For {{cc.name}}</p>
-                </div>
-                <div class="card-body">
-                  <div class="table-responsive">
-                     <table class="table">
-                      <tbody>
-                    {% for m in mat %}
-                    {% if m.video %}
-
-                    <tr>
-
-                      <td>
-                         <h3 style="margin-bottom: 25px"> {{m.title}} </h3>
-                    <video
-                        id="my-video"
-                        class="video-js"
-                        controls
-                        preload="auto"
-                        width="900"
-                        height="500"
-                        poster=""
-                        data-setup="{}"
-                      >
-                        <source src="{{m.file.url}}" type="video/mp4" />
-                      </video>
-                    
-                    
-                      <a href="{{m.file.url}}" download> 
-                        <button class="btn btn-success" style="margin-top: 25px;">Download</button> </a>
-                    </td>
-                  </tr>
-
-                 <!--   <div class="container">
-                      <h3>{{m.title}}</h3>
-                    <video class="embed-responsive embed-responsive-4by3" controls="controls">
-                      <source src="{{m.file.url}}" type="video/mp4" />
-                    </video>
-                  </div> -->
-                    {% endif %}
-                    {% endfor %}
-                  </tbody>
-                </table>
-                  </div>
-                </div>
-              </div>
-            </div>
-          
                   </div>
                 </div>
               </div>
@@ -275,8 +221,8 @@
           <nav class="float-left">
             <ul>
               <li>
-                <a href="https://www.creative-tim.com">
-                  Creative Tim
+                <a href="https://www.thapar.edu">
+                  College Website
                 </a>
               </li>
               <li>
@@ -298,7 +244,7 @@
           </nav>
           <div class="copyright float-right" id="date">
             , made with <i class="material-icons">favorite</i> by
-            <a href="https://www.creative-tim.com" target="_blank">Creative Tim</a> for a better web.
+            <a href="https://www.creative-tim.com" target="_blank">Thaparians</a> for a better web.
           </div>
         </div>
       </footer>

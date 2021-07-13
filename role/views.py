@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
-from .models import Student, Attendance, Course, AttendanceDetail, Studymaterial, Leave, Mark
+from .models import Student, Attendance, Course, AttendanceDetail, Studymaterial, Leave, Mark, Sgpa
 from django.http import JsonResponse
 from django.contrib.auth import authenticate
 from django.contrib.auth import login as auth_login
@@ -297,6 +297,25 @@ def marks(request,*args,**kwargs):
     'mark' : mark,
     }
     return render(request,'role/marks.html',context)
+
+
+def cgpa(request):
+    std = Student.objects.filter(user=request.user)[0]
+    sg = Sgpa.objects.filter(student = std)
+    mysum=0
+    myval=0
+    for s in sg:
+        myval = myval + 1
+        mysum = mysum + s.sgpa
+    mysum = mysum/myval
+    mysum = round(mysum,2)
+    print(mysum)
+    context = {
+    'std' : std,
+    'sg' : sg,
+    'mysum' : mysum,
+    }
+    return render(request,'role/cgpa.html',context)
 
         
 
