@@ -184,55 +184,50 @@
           <div class="row">
             <div class="col-xl-4 col-lg-12">
               <div class="card card-chart">
-                <div class="card-header card-header-success">
-                  <div class="ct-chart" id="dailySalesChart"></div>
-                  
+                <div class="card-header">
+                  <!--<div class="ct-chart" id="dailySalesChart"></div> -->
+                  <canvas id="myChart1" width="200" height="110" style="background-color: white"></canvas>
                 </div>
                 <div class="card-body">
                   <h4 class="card-title">Your Attendance</h4>
                   <p class="card-category">
-                    <span class="text-success"><i class="fa fa-long-arrow-up"></i> 55% </span> increase in today sales.</p>
+                   For {{name}}
                 </div>
                 <div class="card-footer">
-                  <div class="stats">
-                    <i class="material-icons">access_time</i> updated 4 minutes ago
-                  </div>
+                  
                 </div>
               </div>
             </div>
             <div class="col-xl-4 col-lg-12">
               <div class="card card-chart">
-                <div class="card-header card-header-warning">
+                <div class="card-header">
                  <!-- <div class="ct-chart" id="websiteViewsChart"></div> -->
-                  <canvas id="myChart" width="200" height="110"></canvas>
+                  <canvas id="myChart2" width="200" height="200" style="background-color: white;"></canvas>
                 </div>
                 <div class="card-body">
-                  <h4 class="card-title">Email Subscriptions</h4>
-                  <p class="card-category">Last Campaign Performance</p>
+                  <h4 class="card-title">Past Week Day-Wise Attendance</h4>
+                  <p class="card-category">for {{name}}</p>
                 </div>
                 <div class="card-footer">
-                  <div class="stats">
-                    <i class="material-icons">access_time</i> campaign sent 2 days ago
-                  </div>
+                  
                 </div>
               </div>
             </div>
-            <div class="col-xl-4 col-lg-12">
+           <div class="col-xl-4 col-lg-12">
               <div class="card card-chart">
-                <div class="card-header card-header-danger">
-                  <div class="ct-chart" id="completedTasksChart"></div>
+                <div class="card-header">
+                 <!-- <div class="ct-chart" id="completedTasksChart"></div> -->
+                  <canvas id="myChart3" width="200" height="200" style="background-color: white;"></canvas>
                 </div>
                 <div class="card-body">
-                  <h4 class="card-title">Completed Tasks</h4>
-                  <p class="card-category">Last Campaign Performance</p>
+                  <h4 class="card-title">Your Attendance</h4>
+                  <p class="card-category">for {{name1}}</p>
                 </div>
                 <div class="card-footer">
-                  <div class="stats">
-                    <i class="material-icons">access_time</i> campaign sent 2 days ago
-                  </div>
+                  
                 </div>
               </div>
-            </div>
+            </div> -->
           </div>
           <div class="row">
             <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6">
@@ -732,10 +727,11 @@
     url : endpoint,
     async : false,
     success : function(data){
-      mydata = data.data ;
-      labels = data.labels;
-      console.log(data.data);
-      console.log(data.labels);
+      mydata1 = data.data1 ;
+      mydata2 = data.data2;
+      label1 = data.label1;
+      label2 = data.label2;
+      mydata3 = data.data3;
     },
     error : function(error_data){
       console.log(error_data);
@@ -744,14 +740,49 @@
 
   
 
-var ctx = document.getElementById('myChart').getContext('2d');
+var ctx = document.getElementById('myChart1').getContext('2d');
 var myChart = new Chart(ctx, {
-    type: 'bar',
+    type: 'pie',
     data: {
-        labels: labels,
+        labels: label1,
         datasets: [{
-            label: '# of Votes',
-            data: mydata,
+            label: '# of Attendance',
+            data: mydata1,
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(255, 159, 64, 0.2)'
+            ],
+            borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)'
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        scales: {
+            y: {
+                //beginAtZero: true
+            }
+        }
+    }
+});
+var ctx = document.getElementById('myChart2').getContext('2d');
+var myChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: label2,
+        datasets: [{
+            label: '# of Attendance',
+            data: mydata2,
             backgroundColor: [
                 'rgba(255, 99, 132, 0.2)',
                 'rgba(54, 162, 235, 0.2)',
@@ -775,6 +806,41 @@ var myChart = new Chart(ctx, {
         scales: {
             y: {
                 beginAtZero: true
+            }
+        }
+    }
+});
+var ctx = document.getElementById('myChart3').getContext('2d');
+var myChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: label1,
+        datasets: [{
+            label: '# of Attendance',
+            data: mydata3,
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(255, 159, 64, 0.2)'
+            ],
+            borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)'
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        scales: {
+            y: {
+                //beginAtZero: true
             }
         }
     }

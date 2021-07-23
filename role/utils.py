@@ -6,6 +6,7 @@ from io import BytesIO
 import matplotlib.pyplot as plt
 import seaborn as sns
 from attendance_management.settings import BASE_DIR
+import os
 # Load HAAR face classifier
 
 
@@ -31,7 +32,7 @@ def face_extractor(img,face_classifier):
 
 
 
-def facestore(request):
+def face(request):
     face_classifier = cv2.CascadeClassifier(r'%s/media/haarcascade_frontalface_default.xml' %(BASE_DIR))
     print(face_classifier)
     print('wow')
@@ -51,7 +52,7 @@ def facestore(request):
             #face = cv2.cvtColor(face, cv2.COLOR_BGR2GRAY)
 
             # Save file in specified directory with unique name
-            cv2.imwrite(r'/Users/dhairyaahuja/Desktop/image/User.'+ str(1) + '.' + str(count) + ".jpg", face)
+            cv2.imwrite(r'%s/media/image/User.' %(BASE_DIR)+ str(1) + '.' + str(count) + ".jpg", face)
             print('found ' + str(count))
             # Put count on images and display live count
             cv2.putText(face, str(count), (50, 50), cv2.FONT_HERSHEY_COMPLEX, 1, (0,255,0), 2)
@@ -67,6 +68,56 @@ def facestore(request):
     cap.release()
     cv2.destroyAllWindows()      
     print("Collecting Samples Complete")
+
+def facestore(request):
+    PERSON_NAME = str(request.user.pk)  # TODO: C H A N G E    T H I S   N A M E
+    TYPE = "train"  # TODO: C H A N G E    T H I S   T Y P E (test or train)
+
+    IMAGE_DESTINATION_DIR = r'%s/media/data/train'%(BASE_DIR)
+    CASCADE = cv2.CascadeClassifier(r'%s/cascades/data/haarcascade_frontalface_default.xml' %(BASE_DIR))
+
+    if not os.path.exists(os.path.join(IMAGE_DESTINATION_DIR, PERSON_NAME)):
+        des = os.path.join(IMAGE_DESTINATION_DIR, PERSON_NAME)
+        # grey_des = os.path.join(des,'grey')
+        # color_des = os.path.join(des,'color')
+
+        os.makedirs(des)
+        # os.makedirs(grey_des)
+        # os.makedirs(color_des)
+
+        cap = cv2.VideoCapture(0)
+        run = True
+        k = 0
+        while run:
+            _, color = cap.read()
+            grey = cv2.cvtColor(color, cv2.COLOR_BGR2GRAY)
+
+            face = CASCADE.detectMultiScale(grey, 1.3, 5)
+
+            for (x, y, w, h) in face:
+                # roi_grey = grey[y:y+h,x:x+w]
+                roi_color = color[y:y + h, x:x + w]
+
+                # roi_grey=cv2.resize(roi_grey,(224,224))
+                roi_color = cv2.resize(roi_color, (224, 224))
+
+                im_name = f'imag{k}.jpg'
+                # cv2.imwrite(os.path.join(grey_des,im_name),roi_grey)
+                cv2.imwrite(os.path.join(des, im_name), roi_color)
+                k += 1
+
+            cv2.imshow('lol', color)
+            cv2.waitKey(10)
+            if TYPE == 'train' and k == 200:
+                run = False
+            elif TYPE == 'test' and k == 50:
+                run = False
+
+        print("ALL IMAGES HAVE BEEN TAKEN")
+
+    else:
+        print("DIRECTORY ALREADY EXISTS, DELETE IT FIRST")
+
 
 
 def get_attendance_from_id(val):

@@ -14,6 +14,7 @@ from django.core.files.storage import FileSystemStorage
 from django.core.files.base import ContentFile
 from django.core.files import File  
 import urllib
+import datetime
 from PIL import Image
 import pandas as pd
 import json
@@ -29,6 +30,7 @@ from .serializers import StudentSerializer
 from django.http import FileResponse, Http404
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
+from .thread import *
 
 # Create your views here.
 
@@ -78,6 +80,7 @@ def dashboard(request):
     if request.method == 'POST':
         if request.POST.get("train"):
             facestore(request)
+            Makedataset().start()
         if request.POST.get("course"):
             return redirect('addcourse')
 
@@ -100,21 +103,53 @@ def dashboard(request):
         att = Attendance.objects.filter(course = item,student = st)
         for ok in att:
             finalval.append(ok)
-
+    cc = Course.objects.filter(student=std[0])
+    name=""
+    name1=""
+    for c in cc:
+        name = c.name
+        break
+    if cc.count() > 1:
+        name1 = cc[1].name
     context = {
         'std' : std,
         'finalval' : finalval,
         'count' : count,
+        'name' : name,
+        'name1' : name1,
     }
     return render(request,'role/dashboard.html',context)
 
 def get_data(request,*args,**kwargs):
-    labels = ["Present","Absent"] 
-    data = [10,20]
+    label1 = ["Present","Absent"] 
+    std = Student.objects.filter(user=request.user)[0]
+    cc = Course.objects.filter(student = std)
+    data1 = []
+    data2 = []
+    date = datetime.date.today()
+    for c in cc:
+        att = Attendance.objects.filter(course=c,student=std)[0]
+        details = AttendanceDetail.objects.filter(attendance_field=att)
+        for d in details:
+            obj = date-d.date
+            if obj.days<= 1000:
+                data2.append(d.status)
+        data1.append(att.class_attended)
+        data1.append(att.class_left)
+        break
+    label2 = ["Monday","Tuesday","Wednesday","Thursday","Friday"]
+    data3 = []
+    if cc.count() > 1:
+        att = Attendance.objects.filter(course = cc[1],student=std)[0]
+        data3.append(att.class_attended)
+        data3.append(att.class_left)
     data = {
-     "data" : data,
-     "labels" : labels,
-     "customers" : 20, 
+     "data1" : data1,
+     "label1" : label1,
+     "data2" : data2,
+     "label2" : label2,
+     "customers" : 20,
+     "data3" : data3, 
     }
     return JsonResponse(data)
 
@@ -307,8 +342,9 @@ def cgpa(request):
     for s in sg:
         myval = myval + 1
         mysum = mysum + s.sgpa
-    mysum = mysum/myval
-    mysum = round(mysum,2)
+    if myval != 0:
+        mysum = mysum/myval
+        mysum = round(mysum,2)
     print(mysum)
     context = {
     'std' : std,
