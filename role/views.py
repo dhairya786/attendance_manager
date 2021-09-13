@@ -353,6 +353,24 @@ def cgpa(request):
     }
     return render(request,'role/cgpa.html',context)
 
+
+def registerteacher(request):
+    if request.method == 'POST':
+        if request.POST.get("Login"):
+            username = request.POST['username']
+            password = request.POST['password']
+            print(username)
+            print(password)
+            user = authenticate(request, username=username, password=password)
+            if user is not None:
+                auth_login(request, user)
+                return redirect('dashboardteacher')
+            else:
+                messages.success(request, f'Wrong Credentials')
+    return render(request,'role/registerteacher.html')
+
+def dashboardteacher(request):
+    return render(request,'role/dashboardteacher.html')
         
 
 

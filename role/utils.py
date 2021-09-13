@@ -108,7 +108,7 @@ def facestore(request):
 
             cv2.imshow('lol', color)
             cv2.waitKey(10)
-            if TYPE == 'train' and k == 200:
+            if TYPE == 'train' and k == 30:
                 run = False
             elif TYPE == 'test' and k == 50:
                 run = False
