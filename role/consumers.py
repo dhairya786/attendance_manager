@@ -1,7 +1,7 @@
 import json
 from asgiref.sync import async_to_sync
 from channels.generic.websocket import WebsocketConsumer
-from .models import Message,Course,Student
+from .models import Message,Course,Student,Teacher
 from django.contrib.auth.models import User
 
 class ChatConsumer(WebsocketConsumer):
@@ -38,6 +38,8 @@ class ChatConsumer(WebsocketConsumer):
         pk = self.scope['url_route']['kwargs']['pk']
         cc = Course.objects.get(id=pk)
         st = Student.objects.filter(user=message.author)
+        if(st.count()==0):
+            st = Teacher.objects.filter(user = message.author)
         return {
             'author' : message.author.username,
             'content' : message.content,

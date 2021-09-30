@@ -215,14 +215,20 @@ else{e.value="no";location.reload();}
                           {{l.title}}
                         </td>
                         <td>
-                          {% if l.isapproved %}
+                          {% if l.isapproved == 1 %}
                           <div style="color: green;">
                             Approved
                           </div>
-                          {% else %}
+                          {% elif l.isapproved == -1 %}
+                           <div style="color: red;">
+                            Disapproved
+                          </div>
+                          {% elif l.isapproved == 0 %}
                           <div style="color: yellow;">
                             Pending
                           </div>
+                          
+        
                           
                         </td>
 

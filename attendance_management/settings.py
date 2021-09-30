@@ -144,7 +144,11 @@ MEDIA_ROOT = BASE_DIR / 'media'
 LOGIN_REDIRECT_URL = 'home'
 LOGIN_URL = 'login'
 
-
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT =  587
+EMAIL_HOST_USER = 'dhairyaa315@gmail.com'
+EMAIL_HOST_PASSWORD = 'Helloworld787@'
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 

@@ -2,12 +2,12 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
-from .models import Student, Attendance, Course, AttendanceDetail, Studymaterial, Leave, Mark, Sgpa
+from .models import Student, Attendance, Course, AttendanceDetail, Studymaterial, Leave, Mark, Sgpa, Batch, Teacher
 from django.http import JsonResponse
 from django.contrib.auth import authenticate
 from django.contrib.auth import login as auth_login
 from .utils import facestore, get_attendance_from_id, get_chart
-from .forms import StudentForm, LeaveForm
+from .forms import StudentForm, LeaveForm, TeacherForm
 from django.views.generic.detail import DetailView
 from attendance_management.settings import BASE_DIR
 from django.core.files.storage import FileSystemStorage
@@ -17,6 +17,7 @@ import urllib
 import datetime
 from PIL import Image
 import pandas as pd
+import datetime
 import json
 import os
 from rest_framework import viewsets
@@ -30,7 +31,9 @@ from .serializers import StudentSerializer
 from django.http import FileResponse, Http404
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
-from .thread import *
+#from .thread import *
+import smtplib
+from django.core.mail import send_mail
 
 # Create your views here.
 
@@ -78,9 +81,9 @@ def register(request):
 
 def dashboard(request):
     if request.method == 'POST':
-        if request.POST.get("train"):
-            facestore(request)
-            Makedataset().start()
+        #if request.POST.get("train"):
+            #facestore(request)
+            #Makedataset().start()
         if request.POST.get("course"):
             return redirect('addcourse')
 
@@ -291,7 +294,7 @@ def leaverequest(request,*args,**kwargs):
     pk = kwargs['pk']
     cc = Course.objects.get(id=pk)
     std = Student.objects.filter(user=request.user)[0]
-    leave = Leave.objects.filter(student = std, course = cc)
+    leave = Leave.objects.filter(student = std, course = cc).order_by('fro').reverse()
     leaveform = LeaveForm()
     context = {
     'leave' : leave,
@@ -370,8 +373,187 @@ def registerteacher(request):
     return render(request,'role/registerteacher.html')
 
 def dashboardteacher(request):
-    return render(request,'role/dashboardteacher.html')
+    teacher = Teacher.objects.filter(user=request.user)[0]
+    b= Batch.objects.filter(teacher = teacher)
+    cc = Course.objects.filter(teacher_assigned=teacher)[0]
+    students = []
+    batches= []
+    d = datetime.datetime.now().date()
+    for bb in b:
+        for s in bb.student.all():
+            students.append(s)
+            batches.append(bb)
+
+    if request.method == 'POST':
+        #Sendmail(teacher).start()
+        print('hello')
+
+    data = zip(students,batches)
+    course = Course.objects.filter(teacher_assigned=teacher)[0]
+    print(course)
+    context = {
+    'students' : students, 
+    'batches' : batches,
+    'data': data,
+    'course': course,
+    }
+    return render(request,'role/dashboardteacher.html',context)
+
+
+def manualteacher(request):
+    students = []
+    teacher = Teacher.objects.filter(user=request.user)[0]
+    cc = Course.objects.filter(teacher_assigned=teacher)[0]
+    d = datetime.datetime.now().date()
+    print(d)
+    if request.method == 'POST':
+        if request.POST.get("wow"):
+            b = request.POST['batch']
+            bb = Batch.objects.get(pk = b)
+            for s in bb.student.all():
+                students.append(s)
+        if request.POST.get("update"):
+            mylist = request.POST.getlist("checkbox")
+            if len(mylist) != 0:
+                s = Student.objects.get(pk = mylist[0])
+                b = Batch.objects.filter(student = s)[0]
+                for s in b.student.all():
+                    print(s)
+                    att = Attendance.objects.filter(student = s,course = cc)[0]
+                    det = AttendanceDetail.objects.filter(attendance_field=att,date__year = d.year,date__month = d.month,date__day = d.day)
+                    if(det.count()== 0):
+                        obj = AttendanceDetail.objects.create(attendance_field=att,date = d,status = False)
+                        att.save()
+                        obj.save()
+                    else:
+                        oo = det.last()
+                        oo.status = False
+                        oo.save()
+                        print(oo.status)
+            for pp in mylist:
+                st = Student.objects.get(pk = pp)
+                att = Attendance.objects.filter(student = st,course = cc)[0]
+                det = AttendanceDetail.objects.filter(attendance_field=att,date__year = d.year,date__month = d.month,date__day = d.day)
+                oo = det.last()
+                oo.status = True
+                oo.save()
+                print(oo)
+                print(att.class_attended)
+
+            if len(mylist) != 0:
+                s = Student.objects.get(pk = mylist[0])
+                b = Batch.objects.filter(student = s)[0]
+                for s in b.student.all():
+                    att = Attendance.objects.filter(student = s,course = cc)[0]
+                    det = AttendanceDetail.objects.filter(attendance_field=att)
+                    count=0
+                    tot = 0
+                    for obj in det:
+                        if obj.status:
+                            count = count+1
+                        tot = tot+1
+                    att.class_attended = count
+                    att.total_classes = tot
+                    att.save()
+
+    b = Batch.objects.filter(teacher= teacher)
+    batches = []
+    for bb in b:
+        batches.append(bb)
+    present = []
+    absent = []
+    for s in students:
+        att = Attendance.objects.filter(student = s,course = cc)[0]
+        det = AttendanceDetail.objects.filter(attendance_field=att,date__year = d.year,date__month = d.month,date__day = d.day)
+        if(det.count()==0):
+            absent.append(s)
+        else:
+            oo = det.last()
+            if(oo.status):
+                present.append(s)
+            else:
+                absent.append(s)
+
+
+    context = {
+    'batches' : batches,
+    'students' : students,
+    'present' : present,
+    'absent' : absent,
+    }
+    return render(request,'role/manualteacher.html',context)
+
+
+
+def teacherroom(request):
+    teacher = Teacher.objects.filter(user=request.user)[0]
+    cc = Course.objects.filter(teacher_assigned=teacher)[0]
+    pk = cc.id
+    return render(request, 'role/room.html', {
+        'room_name': cc,
+        'room_id' : pk,
+        'username' : request.user.username,
+        'cc' : cc,
+    })
         
+
+def teacherleave(request):
+    teacher = Teacher.objects.filter(user=request.user)[0]
+    cc = Course.objects.filter(teacher_assigned=teacher)[0]
+    students = []
+    b= Batch.objects.filter(teacher = teacher)
+    for bb in b:
+        for s in bb.student.all():
+            students.append(s)
+    leave = []
+    for s in students:
+        ll = Leave.objects.filter(student = s).order_by('fro').reverse()
+        for l in ll:
+            leave.append(l)
+    print(leave)
+
+    context = {
+    'cc' : cc,
+    'leave' : leave,
+    }
+    return render(request,'role/teacherleave.html',context)
+
+
+def viewleave(request, *args,**kwargs):
+    lpk = kwargs['pk']
+    cpk = kwargs['course_pk']
+    leave = Leave.objects.get(pk = lpk)
+    if request.method == 'POST':
+        if request.POST.get('approve'):
+            print('approve')
+            leave.isapproved = 1
+            leave.save()
+            return redirect('teacherleave')
+        if request.POST.get('disapprove'):
+            print('disapprove')
+            leave.isapproved = -1
+            leave.save()
+            return redirect('teacherleave')
+    return render(request,'role/viewleave.html',{'leave' : leave})
+
+
+def teacherprofile(request):
+    if request.method=='POST':
+        teacher = Teacher.objects.filter(user=request.user)[0]
+        form = TeacherForm(request.POST,request.FILES,instance = teacher,initial={'name': teacher.name})
+        if form.is_valid():
+            form.save()
+    else :
+        teacher =Teacher.objects.filter(user=request.user)[0]
+        form = TeacherForm(instance = teacher)
+    context = {
+        'teacher' : teacher,
+        'form' : form
+    }        
+    return render(request,'role/teacherprofile.html',context)
+
+
+
 
 
 

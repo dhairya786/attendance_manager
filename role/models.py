@@ -29,16 +29,11 @@ FIELD_CHOICES = [
 
 
 
-class Batch(models.Model):
-    name = models.CharField(max_length=100)
-
-    def __str__(self):
-        return f"{self.name} and {self.id}"
-
 class Teacher(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
-    image = models.ImageField(blank=True, null=True)
+    image = models.ImageField(blank=True, null=True,default='default.png',upload_to='profile_pics/')
+
 
     def __str__(self):
         return f"{self.name}"
@@ -67,7 +62,6 @@ class Student(models.Model):
     course = models.ManyToManyField(Course, related_name='student', blank=True)
     image = models.ImageField(blank=True, null=True,default='default.png',upload_to='profile_pics/')
 
-
     def ismycourse(self,course):
         for c in self.course.all():
             if c is course:
@@ -77,6 +71,14 @@ class Student(models.Model):
     @register.filter
     def is_my_course(self, course):
         return self.ismycourse(course)
+
+    def __str__(self):
+        return f"{self.name}"
+
+class Batch(models.Model):
+    name = models.CharField(max_length=100)
+    student = models.ManyToManyField(Student,null=True,blank=True)
+    teacher = models.ManyToManyField(Teacher,null=True,blank=True)
 
     def __str__(self):
         return f"{self.name}"
@@ -145,7 +147,7 @@ class Leave(models.Model):
     course = models.ForeignKey(Course,on_delete=models.CASCADE)
     title = models.CharField(max_length = 30)
     details = models.TextField()
-    isapproved = models.BooleanField(default=False)
+    isapproved = models.IntegerField(default=0)
     fro = models.DateField(null=True)
     to = models.DateField(null=True)
     def __str__(self):

@@ -72,21 +72,21 @@
             </a>
           </li>
           <li class="nav-item ">
-            <a class="nav-link" href="{% url 'profile' %}">
+            <a class="nav-link" href="{% url 'teacherprofile' %}">
               <i class="material-icons">person</i>
               <p>User Profile</p>
             </a>
           </li>
           <li class="nav-item ">
-            <a class="nav-link" href="{% url 'addcourse' %}">
+            <a class="nav-link" href="{% url 'teacherroom' %}">
               <i class="material-icons">content_paste</i>
-              <p>Add Course</p>
+              <p>Chat Room</p>
             </a>
           </li>
           <li class="nav-item ">
-            <a class="nav-link" href="{% url 'mycourses' %}">
+            <a class="nav-link" href="{% url 'teacherleave' %}">
               <i class="material-icons">library_books</i>
-              <p>Your Courses</p>
+              <p>Leave Requests</p>
             </a>
           </li>
         <li class="nav-item ">
@@ -196,7 +196,9 @@
                   <h3 class="card-title">
                     <form action="" method="post">
                     {% csrf_token %}
-                    <input type="submit" class="addcourse btn btn-primary rounded" name="course" value="Add">
+                    <a href="{% url 'manualteacher' %}" type="submit" class="addcourse btn btn-primary rounded" name="manual" value="Add">
+                      Add
+                    </a>
                   </form>
                   </h3>
                 </div>
@@ -235,8 +237,11 @@
                   <div class="card-icon">
                     <i class="material-icons">info_outline</i>
                   </div>
-                  <p class="card-category">Courses with <75% attendance</p>
-                  <h3 class="card-title" style="color:white"> <b>{{count}}</b></h3>
+                  <p class="card-category">Finished Taking Attendance??</p>
+                   <form action="" method="post">
+                    {% csrf_token %}
+                    <input type="submit" class="addcourse btn btn-primary rounded" name="train" value="Notify Students"> 
+                    </form>
                 </div>
                 <div class="card-footer">
                   <div class="stats">
@@ -256,37 +261,24 @@
             <div class="col-lg-12 col-md-12">
               <div class="card">
                 <div class="card-header card-header-primary">
-                  <h4 class="card-title">Exisiting Courses</h4>
-                  <p class="card-category">Your Already courses which are started</p>
+                  <h4 class="card-title">Exisiting Students</h4>
+                  <p class="card-category">Students already enrolled fo your Course</p>
                 </div>
 
                 <div class="card-body table-responsive">
                   <table class="table table-hover">
                     <thead class="text-warning">
-                      <th>Course Name</th>
-                      <th>Course Code</th>
-                      <th>Classes Attended</th>
-                      <th>Total Classes</th>
-                      <th>% Attendance</th>
+                      <th>Student Name</th>
+                      <th>Batch </th>
                     </thead>
                     <tbody>
-                      {% if std %} 
-                      {% for st in std %}
-                      {% for cc in st.course.all %} 
-                      {% for obj in finalval %}
-                      {% ifequal obj.course cc%}
+                      {% for row in data %}
                       <tr>
-                            <td><a href="{% url 'coursedetail' cc.pk %}">{{cc.name}}</a></td>
-                            <td>{{cc.number}}</td>
-                            <td> {{obj.class_attended}} </td>
-                            <td> {{obj.total_classes}} </td>
-                            <td> {{obj.percentage}}% </td>
-                      </tr>
-                      {% endifequal %}
-                      {% endfor %}
+                        {% for val in row %}
+                            <td>{{val}}</td>
                         {% endfor %}
+                      </tr>
                         {% endfor %} 
-                      {% endif %}
                       
                     </tbody>
                   </table>
@@ -588,73 +580,7 @@
       </script>
     </div>
   </div>
-  <div class="fixed-plugin">
-    <div class="dropdown show-dropdown">
-      <a href="#" data-toggle="dropdown">
-        <i class="fa fa-cog fa-2x"> </i>
-      </a>
-      <ul class="dropdown-menu">
-        <li class="header-title"> Sidebar Filters</li>
-        <li class="adjustments-line">
-          <a href="javascript:void(0)" class="switch-trigger active-color">
-            <div class="badge-colors ml-auto mr-auto">
-              <span class="badge filter badge-purple active" data-color="purple"></span>
-              <span class="badge filter badge-azure" data-color="azure"></span>
-              <span class="badge filter badge-green" data-color="green"></span>
-              <span class="badge filter badge-warning" data-color="orange"></span>
-              <span class="badge filter badge-danger" data-color="danger"></span>
-            </div>
-            <div class="clearfix"></div>
-          </a>
-        </li>
-        <li class="header-title">Images</li>
-        <li>
-          <a class="img-holder switch-trigger" href="javascript:void(0)">
-            <img src="{% static '/role/img/sidebar-1.jpg' %}" alt="">
-          </a>
-        </li>
-        <li class="active">
-          <a class="img-holder switch-trigger" href="javascript:void(0)">
-            <img src="{% static '/role/img/sidebar-2.jpg' %}" alt="">
-          </a>
-        </li>
-        <li>
-          <a class="img-holder switch-trigger" href="javascript:void(0)">
-            <img src="{% static '/role/img/sidebar-3.jpg' %}" alt="">
-          </a>
-        </li>
-        <li>
-          <a class="img-holder switch-trigger" href="javascript:void(0)">
-            <img src="{% static '/role/img/sidebar-4.jpg' %}" alt="">
-          </a>
-        </li>
-        <li class="button-container">
-          <a href="https://www.creative-tim.com/product/material-dashboard-dark" target="_blank" class="btn btn-primary btn-block">Free Download</a>
-        </li>
-        <!-- <li class="header-title">Want more components?</li>
-            <li class="button-container">
-                <a href="https://www.creative-tim.com/product/material-dashboard-pro" target="_blank" class="btn btn-warning btn-block">
-                  Get the pro version
-                </a>
-            </li> -->
-        <li class="button-container">
-          <a href="https://demos.creative-tim.com/material-dashboard-dark/docs/2.0/getting-started/introduction.html" target="_blank" class="btn btn-default btn-block">
-            View Documentation
-          </a>
-        </li>
-        <li class="button-container github-star">
-          <a class="github-button" href="https://github.com/creativetimofficial/material-dashboard/tree/dark-edition" data-icon="octicon-star" data-size="large" data-show-count="true" aria-label="Star ntkme/github-buttons on GitHub">Star</a>
-        </li>
-        <li class="header-title">Thank you for 95 shares!</li>
-        <li class="button-container text-center">
-          <button id="twitter" class="btn btn-round btn-twitter"><i class="fa fa-twitter"></i> &middot; 45</button>
-          <button id="facebook" class="btn btn-round btn-facebook"><i class="fa fa-facebook-f"></i> &middot; 50</button>
-          <br>
-          <br>
-        </li>
-      </ul>
-    </div>
-  </div>
+  
   <!--   Core JS Files   -->
   <script src="{% static '/role/js/core/jquery.min.js' %}"></script>
   <script src="{% static '/role/js/core/popper.min.js' %}"></script>
@@ -673,135 +599,7 @@
   <script src="{% static '/role/js/material-dashboard.js' %}"></script>
   <!-- Material Dashboard DEMO methods, don't include it in your project! -->
   <script src="{% static '/role/demo/demo.js' %}"></script>
-  <script>
 
-  var endpoint = 'chart_data'
-  var mydata = [];
-  var labels = [];
-  $.ajax({
-    method : "GET",
-    url : endpoint,
-    async : false,
-    success : function(data){
-      mydata1 = data.data1 ;
-      mydata2 = data.data2;
-      label1 = data.label1;
-      label2 = data.label2;
-      mydata3 = data.data3;
-    },
-    error : function(error_data){
-      console.log(error_data);
-    }
-  })
-
-  
-
-var ctx = document.getElementById('myChart1').getContext('2d');
-var myChart = new Chart(ctx, {
-    type: 'pie',
-    data: {
-        labels: label1,
-        datasets: [{
-            label: '# of Attendance',
-            data: mydata1,
-            backgroundColor: [
-                'rgba(255, 99, 132, 0.2)',
-                'rgba(54, 162, 235, 0.2)',
-                'rgba(255, 206, 86, 0.2)',
-                'rgba(75, 192, 192, 0.2)',
-                'rgba(153, 102, 255, 0.2)',
-                'rgba(255, 159, 64, 0.2)'
-            ],
-            borderColor: [
-                'rgba(255, 99, 132, 1)',
-                'rgba(54, 162, 235, 1)',
-                'rgba(255, 206, 86, 1)',
-                'rgba(75, 192, 192, 1)',
-                'rgba(153, 102, 255, 1)',
-                'rgba(255, 159, 64, 1)'
-            ],
-            borderWidth: 1
-        }]
-    },
-    options: {
-        scales: {
-            y: {
-                //beginAtZero: true
-            }
-        }
-    }
-});
-var ctx = document.getElementById('myChart2').getContext('2d');
-var myChart = new Chart(ctx, {
-    type: 'line',
-    data: {
-        labels: label2,
-        datasets: [{
-            label: '# of Attendance',
-            data: mydata2,
-            backgroundColor: [
-                'rgba(255, 99, 132, 0.2)',
-                'rgba(54, 162, 235, 0.2)',
-                'rgba(255, 206, 86, 0.2)',
-                'rgba(75, 192, 192, 0.2)',
-                'rgba(153, 102, 255, 0.2)',
-                'rgba(255, 159, 64, 0.2)'
-            ],
-            borderColor: [
-                'rgba(255, 99, 132, 1)',
-                'rgba(54, 162, 235, 1)',
-                'rgba(255, 206, 86, 1)',
-                'rgba(75, 192, 192, 1)',
-                'rgba(153, 102, 255, 1)',
-                'rgba(255, 159, 64, 1)'
-            ],
-            borderWidth: 1
-        }]
-    },
-    options: {
-        scales: {
-            y: {
-                beginAtZero: true
-            }
-        }
-    }
-});
-var ctx = document.getElementById('myChart3').getContext('2d');
-var myChart = new Chart(ctx, {
-    type: 'bar',
-    data: {
-        labels: label1,
-        datasets: [{
-            label: '# of Attendance',
-            data: mydata3,
-            backgroundColor: [
-                'rgba(255, 99, 132, 0.2)',
-                'rgba(54, 162, 235, 0.2)',
-                'rgba(255, 206, 86, 0.2)',
-                'rgba(75, 192, 192, 0.2)',
-                'rgba(153, 102, 255, 0.2)',
-                'rgba(255, 159, 64, 0.2)'
-            ],
-            borderColor: [
-                'rgba(255, 99, 132, 1)',
-                'rgba(54, 162, 235, 1)',
-                'rgba(255, 206, 86, 1)',
-                'rgba(75, 192, 192, 1)',
-                'rgba(153, 102, 255, 1)',
-                'rgba(255, 159, 64, 1)'
-            ],
-            borderWidth: 1
-        }]
-    },
-    options: {
-        scales: {
-            y: {
-                //beginAtZero: true
-            }
-        }
-    }
-});
-</script>
   <script>
     $(document).ready(function() {
       $().ready(function() {

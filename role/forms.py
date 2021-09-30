@@ -26,4 +26,11 @@ class LeaveForm(forms.ModelForm):
 
 
 
+class TeacherForm(forms.ModelForm): 
+    class Meta: 
+        model = Teacher 
+        fields = ['name','image']
+
+
+
 
