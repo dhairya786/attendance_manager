@@ -1,5 +1,5 @@
 from django import forms
-from .models import Teacher, Student, Course, Leave
+from .models import Teacher, Student, Course, Leave, Studymaterial
 
 
 class StudentForm(forms.ModelForm): 
@@ -30,6 +30,12 @@ class TeacherForm(forms.ModelForm):
     class Meta: 
         model = Teacher 
         fields = ['name','image']
+
+
+class StudyForm(forms.ModelForm):
+    class Meta:
+        model = Studymaterial
+        fields = ['course','title','file','video']
 
 
 

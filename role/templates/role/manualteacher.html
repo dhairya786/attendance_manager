@@ -34,34 +34,34 @@
         </a></div>
       <div class="sidebar-wrapper">
         <ul class="nav">
-          <li class="nav-item ">
-            <a class="nav-link" href="{% url 'dashboard' %}">
+          <li class="nav-item active">
+            <a class="nav-link" href="{% url 'dashboardteacher' %}">
               <i class="material-icons">dashboard</i>
               <p>Dashboard</p>
             </a>
           </li>
           <li class="nav-item ">
-            <a class="nav-link" href="{% url 'profile' %}">
+            <a class="nav-link" href="{% url 'teacherprofile' %}">
               <i class="material-icons">person</i>
               <p>User Profile</p>
             </a>
           </li>
-          <li class="nav-item active">
-            <a class="nav-link" href="{% url 'addcourse' %}">
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'teacherroom' %}">
               <i class="material-icons">content_paste</i>
-              <p>Add Course</p>
+              <p>Chat Room</p>
             </a>
           </li>
           <li class="nav-item ">
-            <a class="nav-link" href="{% url 'mycourses' %}">
+            <a class="nav-link" href="{% url 'teacherleave' %}">
               <i class="material-icons">library_books</i>
-              <p>Your Courses</p>
+              <p>Leave Requests</p>
             </a>
           </li>
         <li class="nav-item ">
-            <a class="nav-link" href="{% url 'cgpa' %}">
+            <a class="nav-link" href="{% url 'teacherpdf' %}">
               <i class="material-icons">bubble_chart</i>
-              <p>Your Cgpa</p>
+              <p>Upload PDF/Video</p>
             </a>
           </li>
          <!-- <li class="nav-item ">
@@ -388,7 +388,7 @@
                     </table>
                     
                     <input type="submit" class="btn btn-primary" style="position: absolute;
-  right: 75px;" value="Update Courses" name="update">
+  right: 75px;" value="Update Attendance" name="update">
 
 </form>
                   </div>

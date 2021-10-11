@@ -1,5 +1,4 @@
 {% load static %}
-{% load crispy_forms_tags %}
 <!DOCTYPE html>
 <html lang="en">
 
@@ -41,14 +40,6 @@
 </head>
 
 <body class="dark-edition">
-  <input type="hidden" id="refreshed" value="no">
- <script type="text/javascript">
-onload=function(){
-var e=document.getElementById("refreshed");
-if(e.value=="no")e.value="yes";
-else{e.value="no";location.reload();}
-}
-</script>
   <div class="wrapper ">
     <div class="sidebar" data-color="green" data-background-color="black" data-image="{% static 'role/img/sidebar-2.jpg' %}">
       <!--
@@ -79,13 +70,13 @@ else{e.value="no";location.reload();}
               <p>Chat Room</p>
             </a>
           </li>
-          <li class="nav-item active">
+          <li class="nav-item">
             <a class="nav-link" href="{% url 'teacherleave' %}">
               <i class="material-icons">library_books</i>
               <p>Leave Requests</p>
             </a>
           </li>
-         <li class="nav-item ">
+         <li class="nav-item active">
             <a class="nav-link" href="{% url 'teacherpdf' %}">
               <i class="material-icons">bubble_chart</i>
               <p>Upload PDF/Video</p>
@@ -177,9 +168,14 @@ else{e.value="no";location.reload();}
         <div class="container-fluid" >
           <div class="row">
             <div class="col-md-12" >
+              <a href="{% url 'teacherupload' cc.pk %}">
+              <button class="btn btn-success"> Upload New File 
+                  </button>
               <div class="card"  >
+
                 <div class="card-header card-header-primary" >
-                  <h4 class="card-title ">Leave Requests</h4>
+                  <h4 class="card-title ">Study Material</h4>
+                  
                   <p class="card-category">For {{cc.name}}</p>
                 </div>
                 <div class="card-body">
@@ -187,140 +183,105 @@ else{e.value="no";location.reload();}
                     <table class="table">
                       <thead class=" text-primary">
                         <th>
-                          Student Name
+                          Title
                         </th>
                         <th>
-                          From
+                          Name of PDF
                         </th>
                         <th>
-                          To
+                          Option
                         </th>
-                        <th>
-                          Reason For Leave
-                        </th>
-                        <th>
-                          Status
-                        </th>
-
                       </thead>
                       <tbody>
-                       {% for l in leave %}
-                       <tr>
-                        <td>
-                          {{l.student.name}}
-                        </td>
-                        <td>
-                          {{l.fro}}
-                        </td>
-                        <td>
-                          {{l.to}}
-                        </td>
-                        <td>
-                          {{l.title}}
-                        </td>
-                        <td>
-                          {% if l.isapproved == 1 %}
-                          <div style="color: green;">
-                            Approved
-                          </div>
-                          {% elif l.isapproved == -1 %}
-                          <div style="color: red;">
-                            Disapproved
-                          </div>
-                          {% else %}
-                          <div style="color: yellow;">
-                            Pending
-                          </div>
-                          
-                        </td>
-
-                        <td>
-
-                         <a href="/view/{{cc.pk}}/{{l.pk}}/" ><button type="button" class="btn btn-warning" id="l.pk" >View </button>
-                         </a>
-                         {% endif %}
-                        </td>
-
-
-                       </tr>
+                        {% for m in mat %}
+                        {% if m.video %}
+                        {% else %}
+                        <tr>
+                          <td>
+                            {{m.title}}
+                          </td>
+                          <td>
+                            {{m.file}}
+                          </td>
+                          <td>
+                            <a href="{{m.file.url}}">
+                            Preview
+                          </a>
+                          </td>
+                        </tr>
+                        {% endif %}
                        {% endfor %}
                       </tbody>
                     </table>
-                   <!-- <button type="button" class="btn btn-success" data-toggle="modal" data-target="#exampleModal">Add New </button> -->
                   </div>
                 </div>
               </div>
             </div>
-            
+            <div class="col-md-12">
+              <div class="card">
+                <div class="card-header card-header-primary">
+                  <h4 class="card-title ">Lecture Videos</h4>
+                  <p class="card-category">For {{cc.name}}</p>
+                </div>
+                <div class="card-body">
+                  <div class="table-responsive">
+                     <table class="table">
+                      <tbody>
+                    {% for m in mat %}
+                    {% if m.video %}
+
+                    <tr>
+
+                      <td>
+                         <h3 style="margin-bottom: 25px"> {{m.title}} </h3>
+                    <video
+                        id="my-video"
+                        class="video-js"
+                        controls
+                        preload="auto"
+                        width="900"
+                        height="500"
+                        poster=""
+                        data-setup="{}"
+                      >
+                        <source src="{{m.file.url}}" type="video/mp4" />
+                      </video>
+                    
+                    
+                      <a href="{{m.file.url}}" download> 
+                        <button class="btn btn-success" style="margin-top: 25px;">Download</button> </a>
+                    </td>
+                  </tr>
+
+                 <!--   <div class="container">
+                      <h3>{{m.title}}</h3>
+                    <video class="embed-responsive embed-responsive-4by3" controls="controls">
+                      <source src="{{m.file.url}}" type="video/mp4" />
+                    </video>
+                  </div> -->
+                    {% endif %}
+                    {% endfor %}
+                  </tbody>
+                </table>
+                  </div>
+                </div>
+              </div>
+            </div>
           
                   </div>
                 </div>
               </div>
 
 
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Add New Leave Request</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <div class="form-group">
-      <label for="inputsm" style="color : dimgrey;">Title</label>
-      <input class="form-control" id="title" type="text" style="color: black;">
-      </div>
-       <div class="form-group">
-    <label for="details" style="color : dimgrey;">Detailed Reason</label>
 
-    <textarea class="form-control" id="details" rows="3" style="color : black; margin-top: 13px;"></textarea>
-  </div>
-  <label style="color : dimgrey;" for="fro">From </label> 
-  <input type="date" id="fro">
-  <label style="color : dimgrey;" for="to">To </label> 
-  <input type="date" id="to">
-      </div>
-     <!--<form method="post" id="form">
-        {% csrf_token %}
-      {{form|crispy}} -->
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="submit" class="btn btn-primary" id="ajax">Add new leave</button>
-      </div>
-      </form>
-    </div>
-  </div>
-</div>
-
-<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLongTitle">Delete Field</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        Are you sure you want to delete this request?
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-danger">Delete</button>
-      </div>
-    </div>
-  </div>
-</div>
 
      <footer class="footer">
         <div class="container-fluid">
           <nav class="float-left">
             <ul>
               <li>
-                <a href="https://www.thapar.edu">
-                  College Website
+                <a href="https://www.creative-tim.com">
+                  Creative Tim
                 </a>
               </li>
               <li>
@@ -342,7 +303,7 @@ else{e.value="no";location.reload();}
           </nav>
           <div class="copyright float-right" id="date">
             , made with <i class="material-icons">favorite</i> by
-            <a href="https://www.creative-tim.com" target="_blank">Thaparians</a> for a better web.
+            <a href="https://www.creative-tim.com" target="_blank">Creative Tim</a> for a better web.
           </div>
         </div>
       </footer>
@@ -609,23 +570,6 @@ else{e.value="no";location.reload();}
     });
   </script>
   <script src="https://vjs.zencdn.net/7.11.4/video.min.js"></script>
-   <script>
-    console.log("hello");
-    $("#ajax").click(function(){
-   var requestData = { 'student' : '{{std.pk}}', 'course' : '{{cc.pk}}' ,title: $('#title').val() , 'details': $('#details').val() , 'fro': $('#fro').val() , 'to': $('#to').val()}
-   console.log(requestData);
-        $.ajax({
-        type: 'POST',
-        url : "{% url 'save' %}",
-        data : JSON.stringify(requestData),
-        processData: false,
-        contentType: 'application/json',
-        success : function(data){
-          location.reload();
-        }
-      })
-        });
-  </script>
 </body>
 
 </html>

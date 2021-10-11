@@ -77,11 +77,13 @@ class Sendmail(threading.Thread):
 			for s in students:
 				att = Attendance.objects.filter(student = s,course = cc)[0]
 				det = AttendanceDetail.objects.filter(attendance_field=att,date__year = d.year,date__month = d.month,date__day = d.day)
+				haha = "Your attendance has been successfully marked for " + cc.name + "."  
+				hahahaha = "Your attendance has not been marked for " + cc.name + ". Present in the class?? Contact your teacher for manual attendance" 
 				if det.count()!=0:
 					if det.last().status:
-						send_mail('Greetings','Your attendance has been successfully marked.','dhairyaa315@gnail.com',[s.email],fail_silently = False)
+						send_mail('Greetings',haha,'attendancetiet@gmail.com',[s.email],fail_silently = False)
 					else:
-						send_mail('Greetings','Your attendance has not been marked. Present in the class?? Contact your teacher for manual attendance','dhairyaa315@gnail.com',[s.email],fail_silently = False)
+						send_mail('Greetings',hahahaha,'attendancetiet@gmail.com',[s.email],fail_silently = False)
 		except Exception as e:
 			print(e)
 

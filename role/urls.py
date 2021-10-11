@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import home, register, dashboard, addcourse, CourseDetail, profile, get_data, room, api, mycourses, pdfview, studymaterial, leaverequest, save, delete, marks, cgpa, registerteacher, dashboardteacher, manualteacher, teacherroom, teacherleave, viewleave, teacherprofile
+from .views import home, register, dashboard, addcourse, CourseDetail, profile, get_data, room, api, mycourses, pdfview, studymaterial, leaverequest, save, delete, marks, cgpa, registerteacher, dashboardteacher, manualteacher, teacherroom, teacherleave, viewleave, teacherprofile, teacherpdf, teacherupload
 urlpatterns = [
     path('', home, name='home'),
     path('pdfview/',pdfview,name='pdfview'),
@@ -25,4 +25,6 @@ urlpatterns = [
     path('dashboardteacher/teacherleave',teacherleave,name='teacherleave'),
     path('view/<int:course_pk>/<int:pk>/',viewleave,name='viewleave'),
     path('dashboardteacher/teacherprofile/',teacherprofile,name='teacherprofile'),
+    path('dashboardteacher/teacherpdf/',teacherpdf,name='teacherpdf'),
+    path('dashboardteacher/teacherupload/<int:pk>/',teacherupload,name='teacherupload'),
 ]

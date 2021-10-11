@@ -7,7 +7,7 @@ from django.http import JsonResponse
 from django.contrib.auth import authenticate
 from django.contrib.auth import login as auth_login
 from .utils import facestore, get_attendance_from_id, get_chart
-from .forms import StudentForm, LeaveForm, TeacherForm
+from .forms import StudentForm, LeaveForm, TeacherForm, StudyForm
 from django.views.generic.detail import DetailView
 from attendance_management.settings import BASE_DIR
 from django.core.files.storage import FileSystemStorage
@@ -31,7 +31,7 @@ from .serializers import StudentSerializer
 from django.http import FileResponse, Http404
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
-#from .thread import *
+from .thread import *
 import smtplib
 from django.core.mail import send_mail
 
@@ -81,9 +81,9 @@ def register(request):
 
 def dashboard(request):
     if request.method == 'POST':
-        #if request.POST.get("train"):
-            #facestore(request)
-            #Makedataset().start()
+        if request.POST.get("train"):
+            facestore(request)
+            Makedataset().start()
         if request.POST.get("course"):
             return redirect('addcourse')
 
@@ -385,7 +385,7 @@ def dashboardteacher(request):
             batches.append(bb)
 
     if request.method == 'POST':
-        #Sendmail(teacher).start()
+        Sendmail(teacher).start()
         print('hello')
 
     data = zip(students,batches)
@@ -551,6 +551,31 @@ def teacherprofile(request):
         'form' : form
     }        
     return render(request,'role/teacherprofile.html',context)
+
+
+def teacherpdf(request):
+    teacher = Teacher.objects.filter(user=request.user)[0]
+    cc = Course.objects.filter(teacher_assigned=teacher)[0]
+    mat = Studymaterial.objects.filter(course=cc)
+    context = {
+    'cc' : cc,
+    'mat' : mat,
+    }
+    return render(request,'role/teacherpdf.html',context)
+
+def teacherupload(request, *args, **kwargs):
+    cpk = kwargs['pk']
+    cc = Course.objects.get(pk = cpk)
+    form = StudyForm(initial={'course' : cc})
+    context = {
+    'form' : form,
+    }
+    if request.method=='POST':
+        form = StudyForm(request.POST,request.FILES,initial={'course': cc})
+        if form.is_valid():
+            form.save()
+        return redirect('teacherpdf')
+    return render(request,'role/teacherupload.html',context)
 
 
 
