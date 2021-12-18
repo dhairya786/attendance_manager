@@ -173,3 +173,12 @@ class Sgpa(models.Model):
         return f"{self.student.name} got {self.sgpa} in {self.semester} semester"
 
 
+class Attendancepic(models.Model):
+    number = models.IntegerField()
+    teacher = models.ForeignKey(Teacher,on_delete=models.CASCADE)
+    image = models.ImageField(blank=True,null=True,upload_to='attendance_pics/')
+
+    def __str__(self):
+        return f"{self.number} of {self.teacher.name}"
+
+

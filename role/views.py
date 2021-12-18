@@ -6,7 +6,7 @@ from .models import Student, Attendance, Course, AttendanceDetail, Studymaterial
 from django.http import JsonResponse
 from django.contrib.auth import authenticate
 from django.contrib.auth import login as auth_login
-from .utils import facestore, get_attendance_from_id, get_chart
+from .utils import facestore, get_attendance_from_id, get_chart, take
 from .forms import StudentForm, LeaveForm, TeacherForm, StudyForm
 from django.views.generic.detail import DetailView
 from attendance_management.settings import BASE_DIR
@@ -385,8 +385,13 @@ def dashboardteacher(request):
             batches.append(bb)
 
     if request.method == 'POST':
-        Sendmail(teacher).start()
-        print('hello')
+        print(request.POST)
+        if request.POST.get("notify"):
+            Sendmail(teacher).start()
+        if request.POST.get("train"):
+            print('good')
+            take(request)
+            return redirect('markedstudent')
 
     data = zip(students,batches)
     course = Course.objects.filter(teacher_assigned=teacher)[0]
@@ -576,6 +581,41 @@ def teacherupload(request, *args, **kwargs):
             form.save()
         return redirect('teacherpdf')
     return render(request,'role/teacherupload.html',context)
+
+
+def markedstudent(request):
+    teacher = Teacher.objects.filter(user=request.user)[0]
+    cc = Course.objects.filter(teacher_assigned=teacher)[0]
+    b= Batch.objects.filter(teacher = teacher)
+    students = []
+    batches= []
+    d = datetime.datetime.now().date()
+    for bb in b:
+        for s in bb.student.all():
+            students.append(s)
+    finalstudents = []
+    pk = request.user.pk
+    src = []
+    mylist = Attendancepic.objects.filter(teacher=teacher)
+    print(mylist)
+    for i in range(6):
+        src.append(str(pk)+'_'+str(i))
+    print(src)
+    for s in students:
+        att = Attendance.objects.filter(student = s,course = cc)[0]
+        det = AttendanceDetail.objects.filter(attendance_field=att,date__year = d.year,date__month = d.month,date__day = d.day)
+        if(det.count()!=0):
+            oo = det.last()
+            if(oo.status):
+                finalstudents.append(s)
+    context = {
+        'finalstudents' : finalstudents,
+        'src' : src,
+        'user' : request.user.pk,
+        'mylist' : mylist,
+    }
+    Sendmail(teacher).start()
+    return render(request,'role/markedstudent.html',context)
 
 
 
